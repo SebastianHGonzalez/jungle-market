@@ -1,0 +1,31 @@
+{
+  "name": "jungle-market",
+  "version": "0.1.0",
+  "description": "event driven mini shopping system",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sebastian Gonzalez <sebastian.h.gonzalez@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-json": "^2.1.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "prettier": "^1.19.1",
+    "typescript-eslint": "0.0.1-alpha.0"
+  },
+  "dependencies": {
+    "typescript": "^3.8.3"
+  }
+}
