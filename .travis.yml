@@ -1,0 +1,6 @@
+before_script:
+  - npm i -g concurrently
+  - npm run install
+language: node_js
+node_js:
+  - "13"
