@@ -1,6 +1,25 @@
 version: "3"
 services:
+    rabbitmq:
+        image: "rabbitmq:3.6-management-alpine"
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        networks:
+            - network
+
     api:
+        depends_on:
+            - rabbitmq
         build: ./api
         ports:
             - "3000:3000"
+        environment:
+            AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
+        networks:
+            - network
+
+networks:
+    # Declare our private network.  We must declare one for the magic
+    # Docker DNS to work, but otherwise its default settings are fine.
+    network: {}

@@ -12,5 +12,5 @@ event driven mini shopping system.
 start services
 
 ```bash
-docker-compose <start|up> [api]
+docker-compose <start|up> rabbitmq [api]
 ```
