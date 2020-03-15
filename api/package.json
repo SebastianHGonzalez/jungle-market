@@ -9,6 +9,10 @@
     "start": "node build/index",
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SebastianHGonzalez/jungle-market.git"
+  },
   "author": "Sebastian Gonzalez <sebastian.h.gonzalez@gmail.com>",
   "license": "GPL-3.0",
   "devDependencies": {
@@ -22,5 +26,9 @@
   },
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/SebastianHGonzalez/jungle-market/issues"
+  },
+  "homepage": "https://github.com/SebastianHGonzalez/jungle-market/tree/develop/api#readme"
 }
