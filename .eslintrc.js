@@ -14,6 +14,7 @@ module.exports = {
         "jest/globals": true
     },
     rules: {
+        "import/no-unresolved": [0],
         "jest/no-disabled-tests": [1],
         "jest/no-focused-tests": [2],
         "jest/no-identical-title": [2],

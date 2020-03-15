@@ -15,6 +15,12 @@ http api gateway to create events on the application
 npm i
 ```
 
+- Configure `.env` variables
+
+```bash
+cp .env.example .env
+```
+
 - Run on dev mode
 
 ```bash

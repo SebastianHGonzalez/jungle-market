@@ -1,8 +1,18 @@
-import app from './app';
+import dotenv from 'dotenv';
 
-const port = 3000;
+import createApp from './app';
+import getConfig from './config';
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log('Listening to %d!', port);
+dotenv.config();
+
+const config = getConfig();
+
+createApp(config).then((app) => {
+  app.listen(config.PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log('Listening to %d!', config.PORT);
+  });
+}).catch((e) => {
+  console.error(e);
+  process.exit(1);
 });
