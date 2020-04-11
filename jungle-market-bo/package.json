@@ -1,0 +1,39 @@
+{
+  "name": "jungle-market-bo",
+  "version": "1.0.0",
+  "description": "jungle market back office front end",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SebastianHGonzalez/jungle-market.git"
+  },
+  "author": "Sebastian Gonzalez <sebastian.h.gonzalez@gmail.com>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@apollo/react-hooks": "^3.1.4",
+    "apollo-boost": "^0.4.7",
+    "graphql": "^15.0.0",
+    "next": "^9.3.4",
+    "next-with-apollo": "^5.0.0",
+    "node-fetch": "^2.6.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.1",
+    "@types/react": "^16.9.34",
+    "@types/styled-components": "^5.0.1",
+    "babel-plugin-styled-components": "^1.10.7",
+    "jest": "^25.3.0",
+    "ts-jest": "^25.3.1",
+    "typescript": "^3.8.3"
+  }
+}

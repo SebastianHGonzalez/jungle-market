@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
-    "install": "concurrently \"cd api && npm i\"",
-    "test": "concurrently \"cd api && npm test\""
+    "install": "concurrently \"cd api && npm i\" \"cd jungle-market-bo && npm i\"",
+    "test": "concurrently \"cd api && npm test\" \"cd jungle-market-bo && npm test\""
   },
   "repository": {
     "type": "git",

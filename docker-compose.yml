@@ -19,6 +19,14 @@ services:
         networks:
             - network
 
+    back-office:
+        build: ./jungle-market-bo
+        ports:
+            - "8080:3000"
+        environment:
+            JUNGLE_MARKET_QUERY_API_ENDPOINT: "http://query-api:3000/"
+            JUNGLE_MARKET_QUERY_API_ENDPOINT_PRIVATE: "http://query-api:3000/"
+
 networks:
     # Declare our private network.  We must declare one for the magic
     # Docker DNS to work, but otherwise its default settings are fine.
