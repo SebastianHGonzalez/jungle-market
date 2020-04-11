@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "CommonJS",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "build",
+        "rootDir": "src",
+        "baseUrl": "src",
+        "sourceMap": true
+    },
+    "exclude": [
+        "node_modules",
+        "**/*.(test|spec).ts"
+    ]
+}

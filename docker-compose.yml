@@ -35,6 +35,9 @@ services:
             JUNGLE_MARKET_COMMAND_API_ENDPOINT: "http://command-api:3000/"
             JUNGLE_MARKET_COMMAND_API_ENDPOINT_PRIVATE: "http://command-api:3000/"
 
+    shopping-cart-query-service:
+        build: ./jungle-market-shopping-cart-query-service
+
 networks:
     # Declare our private network.  We must declare one for the magic
     # Docker DNS to work, but otherwise its default settings are fine.
