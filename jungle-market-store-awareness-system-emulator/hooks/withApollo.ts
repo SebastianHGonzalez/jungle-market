@@ -4,8 +4,8 @@ import getConfig from 'next/config';
 
 export default withApollo(({ initialState }) => {
   const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
-  const uri = serverRuntimeConfig.jungleMarketCommandApiEndpoint
-    || publicRuntimeConfig.jungleMarketCommandApiEndpoint;
+  const uri = serverRuntimeConfig.jungleMarketQueryApiEndpoint
+    || publicRuntimeConfig.jungleMarketQueryApiEndpoint;
 
   return new ApolloClient({
     uri,

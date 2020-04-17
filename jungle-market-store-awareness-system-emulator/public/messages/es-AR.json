@@ -1,0 +1,9 @@
+{
+  "app.name": "Emulator",
+
+  "next": "Siguiente",
+  "previous": "Anterior",
+  "back.toList": "Volver al listado",
+
+  "results.count": "${pageSize} - ${count} Resultados"
+}
