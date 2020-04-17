@@ -1,36 +1,67 @@
 import { ApolloServer, gql } from 'apollo-server';
 
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  type Sku {
+    id: ID!
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type ShoppingCartProduct {
+    count: Int
+    sku: Sku
+  }
+
+  type Branch {
+    id: ID!
+  }
+
+  type Customer {
+    id: ID!
+  }
+
+  type ShoppingCart {
+    branch: Branch
+    customer: Customer
+    products: [ShoppingCartProduct]
+  }
+
+  type ShoppingCartsQueryResult {
+    shoppingCarts: [ShoppingCart]
+  }
+
   type Query {
-    books: [Book]
+    shoppingCarts(branchId: ID!): ShoppingCartsQueryResult
   }
 `;
 
-const books = [
+const branches = [{ id: '1' }];
+
+const customers = [{ id: '2' }];
+
+const skus = [{ id: '3' }];
+
+const shoppingCarts = [
   {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
+    id: '4',
+    branchId: '1',
+    customerId: '2',
+    products: [{ count: 2, skuId: '3' }],
   },
 ];
 
 const resolvers = {
   Query: {
-    books: () => books,
+    shoppingCarts: (parent: unknown, args: any) => ({
+      shoppingCarts: shoppingCarts.filter(
+        ({ branchId }) => branchId === args.branchId,
+      ),
+    }),
+  },
+  ShoppingCart: {
+    branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
+    customer: (shoppingCart: any) => customers.find(({ id }) => id === shoppingCart.customerId),
+  },
+  ShoppingCartProduct: {
+    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.skuId),
   },
 };
 
