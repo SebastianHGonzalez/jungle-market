@@ -8,17 +8,6 @@ services:
         networks:
             - network
 
-    api:
-        depends_on:
-            - rabbitmq
-        build: ./api
-        ports:
-            - "3000:3000"
-        environment:
-            AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
-        networks:
-            - network
-
     back-office:
         build: ./jungle-market-bo
         ports:

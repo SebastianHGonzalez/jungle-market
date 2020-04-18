@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from "react";
-import { string, bool, node, shape } from "prop-types";
-import styled from "styled-components";
+import React from 'react';
+import {
+  string, bool, node, shape,
+} from 'prop-types';
+import styled from 'styled-components';
 
-import I18n from "components/common/i18n";
+import I18n from 'components/common/i18n';
 
 const Optional = styled.i`
   font-size: small;
@@ -16,16 +18,24 @@ const LabelWrapper = styled.div`
   margin: 0 0.5em;
 `;
 
+interface Props extends React.Props<any> {
+  optional?: boolean;
+  left?: boolean;
+  name: string;
+  label: string;
+  fillers: { [key: string]: string | number };
+  fallback?: string;
+}
+
 function CheckboxFieldLabel({
   optional,
-  name,
   label,
   children,
   left,
   fillers,
   fallback,
   ...props
-}) {
+}: Props) {
   return (
     <label {...props}>
       {!left && children}
@@ -38,7 +48,8 @@ function CheckboxFieldLabel({
         {optional && (
           <Optional>
             (
-            <I18n id="optional" />)
+            <I18n id="optional" />
+            )
           </Optional>
         )}
       </LabelWrapper>
@@ -54,17 +65,17 @@ CheckboxFieldLabel.propTypes = {
   label: node,
   fillers: shape({}),
   fallback: string,
-  children: node
+  children: node,
 };
 
 CheckboxFieldLabel.defaultProps = {
   optional: false,
   left: false,
-  name: "",
+  name: '',
   label: undefined,
   fillers: undefined,
   fallback: undefined,
-  children: undefined
+  children: undefined,
 };
 
 export default styled(CheckboxFieldLabel)`

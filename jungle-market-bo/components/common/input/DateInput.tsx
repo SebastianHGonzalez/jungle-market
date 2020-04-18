@@ -1,11 +1,22 @@
-import React, { useMemo, useCallback } from "react";
-import { string, func, oneOfType, instanceOf, bool } from "prop-types";
-import styled, { css } from "styled-components";
-import DayPickerInput from "react-day-picker/DayPickerInput";
+import React, { useMemo, useCallback } from 'react';
+import {
+  string, func, oneOfType, instanceOf, bool,
+} from 'prop-types';
+import styled, { css } from 'styled-components';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
 
-import { InputCss, InputWrapper } from "components/common/input/TextInput";
-import Button from "components/common/input/Button";
-import Close from "components/common/icons/Close";
+import { InputCss, InputWrapper } from 'components/common/input/TextInput';
+import Button from 'components/common/input/Button';
+import Close from 'components/common/icons/Close';
+
+interface Props extends React.Props<any> {
+  value: string | Date;
+  onChange: (newDate: string | Date | null) => void;
+  placeholder: string;
+  min: string | Date;
+  max: string | Date;
+  clearable: boolean;
+}
 
 export default function DateInput({
   value,
@@ -13,17 +24,16 @@ export default function DateInput({
   placeholder,
   min,
   max,
-  clearable
-}) {
+  clearable,
+}: Props) {
   const dateValue = useMemo(() => value && new Date(value), [value]);
 
   const disabledDays = useMemo(
-    () =>
-      [
-        min && { before: new Date(min) },
-        max && { after: new Date(max) }
-      ].filter(i => i),
-    [min, max]
+    () => [
+      min && { before: new Date(min) },
+      max && { after: new Date(max) },
+    ].filter((i) => i),
+    [min, max],
   );
 
   const dayPickerProps = useMemo(() => ({ disabledDays }), [disabledDays]);
@@ -62,7 +72,7 @@ DateInput.propTypes = {
   placeholder: string,
   min: oneOfType([string, instanceOf(Date)]),
   max: oneOfType([string, instanceOf(Date)]),
-  clearable: bool
+  clearable: bool,
 };
 
 DateInput.defaultProps = {
@@ -71,7 +81,7 @@ DateInput.defaultProps = {
   placeholder: undefined,
   min: undefined,
   max: undefined,
-  clearable: false
+  clearable: false,
 };
 
 const DayPickerStyles = css`

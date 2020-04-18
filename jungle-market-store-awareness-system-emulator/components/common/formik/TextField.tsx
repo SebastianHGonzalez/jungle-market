@@ -18,7 +18,7 @@ export default function TextField({
     <TextInput
       {...field}
       {...props}
-      error={touched[field.name] && errors[field.name]}
+      error={(touched[field.name] && errors[field.name]) || undefined}
     />
   );
 }

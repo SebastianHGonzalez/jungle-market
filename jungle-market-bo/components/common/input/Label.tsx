@@ -1,8 +1,10 @@
-import React from "react";
-import { string, bool, node, arrayOf } from "prop-types";
-import styled from "styled-components";
+import React from 'react';
+import {
+  string, bool, node, arrayOf,
+} from 'prop-types';
+import styled from 'styled-components';
 
-import I18n from "components/common/i18n";
+import I18n from 'components/common/i18n';
 
 const Optional = styled.i`
   font-size: small;
@@ -16,7 +18,7 @@ const LabelWrapper = styled.div`
 
 const LabelSpan = styled.span`
   color: #808080;
-  font-size: .8125rem;
+  font-size: 0.8125rem;
   font-stretch: normal;
   font-style: normal;
   font-weight: 600;
@@ -46,7 +48,16 @@ const LabelSpan = styled.span`
 //   }
 // `;
 
-function Label({ optional, label, name, children, errors, ...props }) {
+interface Props extends React.Props<any> {
+  optional?: boolean;
+  errors?: string[];
+  name: string;
+  label: any;
+}
+
+function Label({
+  optional, label, name, children, errors, ...props
+}: Props) {
   return (
     <label {...props}>
       <LabelWrapper>
@@ -58,7 +69,8 @@ function Label({ optional, label, name, children, errors, ...props }) {
         {optional && (
           <Optional>
             (
-            <I18n id="optional" />)
+            <I18n id="optional" />
+            )
           </Optional>
         )}
       </LabelWrapper>
@@ -75,14 +87,14 @@ Label.propTypes = {
   errors: arrayOf(string),
   name: string,
   label: node,
-  children: node
+  children: node,
 };
 
 Label.defaultProps = {
   optional: false,
-  name: "",
+  name: '',
   label: undefined,
-  children: undefined
+  children: undefined,
 };
 
 export default styled(Label)`
