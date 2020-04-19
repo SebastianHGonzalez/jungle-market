@@ -27,6 +27,17 @@ services:
     shopping-cart-query-service:
         build: ./jungle-market-shopping-cart-query-service
 
+    shopping-cart-command-service:
+        build: ./jungle-market-shopping-cart-command-service
+        depends_on:
+            - rabbitmq
+        environment: 
+            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq"
+            JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
+            JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
+            JUNGLE_MARKET_AMQP_QUEUE: "shoppingCart"
+            JUNGLE_MARKET_AMQP_PATTERN: ""
+
     graphql-query-api:
         depends_on:
             - shopping-cart-query-service
