@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
-    "install": "concurrently \"cd api && npm i\" \"cd jungle-market-bo && npm i\" \"cd jungle-market-store-awareness-system-emulator && npm i\" \"cd jungle-market-shopping-cart-query-service && npm i\" \"cd jungle-market-graphql-query-api && npm i\"",
-    "test": "concurrently \"cd api && npm test\" \"cd jungle-market-bo && npm test\" \"cd jungle-market-store-awareness-system-emulator && npm test\" \"cd jungle-market-shopping-cart-query-service && npm test\" \"cd jungle-market-graphql-query-api && npm test\""
+    "install": "concurrently \"cd jungle-market-bo && npm i\" \"cd jungle-market-graphql-command-api && npm i\" \"cd jungle-market-graphql-query-api && npm i\" \"cd jungle-market-shopping-cart-query-service && npm i\" \"cd jungle-market-store-awareness-system-emulator && npm i\"",
+    "test": "concurrently \"cd jungle-market-bo && npm test\" \"cd jungle-market-graphql-command-api && npm test\" \"cd jungle-market-graphql-query-api && npm test\" \"cd jungle-market-shopping-cart-query-service && npm test\" \"cd jungle-market-store-awareness-system-emulator && npm test\""
   },
   "repository": {
     "type": "git",

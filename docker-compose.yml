@@ -36,6 +36,15 @@ services:
         environment:
             JUNGLE_MARKET_SHOPPING_CART_QUERY_SERVICE_ENDPOINT: "http://shopping-cart-query-service:4000/"
 
+    graphql-command-api:
+        depends_on:
+            - shopping-cart-command-service
+        build: ./jungle-market-graphql-command-api
+        ports:
+            - "4000:4000"
+        environment:
+            JUNGLE_MARKET_SHOPPING_CART_COMMAND_SERVICE_ENDPOINT: "http://shopping-cart-command-service:4000/"
+
 networks:
     # Declare our private network.  We must declare one for the magic
     # Docker DNS to work, but otherwise its default settings are fine.
