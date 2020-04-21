@@ -6,7 +6,7 @@ services:
             - "5672:5672"
             - "15672:15672"
         networks:
-            - network
+            - command-network
 
     back-office:
         build: ./jungle-market-bo
@@ -15,6 +15,8 @@ services:
         environment:
             JUNGLE_MARKET_QUERY_API_ENDPOINT: "http://query-api:3000/"
             JUNGLE_MARKET_QUERY_API_ENDPOINT_PRIVATE: "http://query-api:3000/"
+        networks:
+            - query-network
 
     sas-emulator:
         build: ./jungle-market-store-awareness-system-emulator
@@ -23,20 +25,26 @@ services:
         environment:
             JUNGLE_MARKET_COMMAND_API_ENDPOINT: "http://command-api:3000/"
             JUNGLE_MARKET_COMMAND_API_ENDPOINT_PRIVATE: "http://command-api:3000/"
+        networks:
+            - command-network
 
     shopping-cart-query-service:
         build: ./jungle-market-shopping-cart-query-service
+        networks:
+            - query-network
 
     shopping-cart-command-service:
         build: ./jungle-market-shopping-cart-command-service
         depends_on:
             - rabbitmq
         environment: 
-            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq"
+            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
             JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
             JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
             JUNGLE_MARKET_AMQP_QUEUE: "shoppingCart"
             JUNGLE_MARKET_AMQP_PATTERN: ""
+        networks:
+            - command-network
 
     graphql-query-api:
         depends_on:
@@ -46,17 +54,26 @@ services:
             - "4000:4000"
         environment:
             JUNGLE_MARKET_SHOPPING_CART_QUERY_SERVICE_ENDPOINT: "http://shopping-cart-query-service:4000/"
+        networks:
+            - query-network
 
     graphql-command-api:
-        depends_on:
-            - shopping-cart-command-service
         build: ./jungle-market-graphql-command-api
         ports:
-            - "4000:4000"
-        environment:
-            JUNGLE_MARKET_SHOPPING_CART_COMMAND_SERVICE_ENDPOINT: "http://shopping-cart-command-service:4000/"
+            - "4001:4000"
+        depends_on:
+            - rabbitmq
+        environment: 
+            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
+            JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
+            JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
+            JUNGLE_MARKET_AMQP_ROUTING_KE: ""
+        networks:
+            - command-network
 
 networks:
     # Declare our private network.  We must declare one for the magic
     # Docker DNS to work, but otherwise its default settings are fine.
     network: {}
+    command-network: {}
+    query-network: {}
