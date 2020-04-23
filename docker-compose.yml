@@ -34,6 +34,7 @@ services:
             - query-network
 
     shopping-cart-command-service:
+        restart: unless-stopped
         build: ./jungle-market-shopping-cart-command-service
         depends_on:
             - rabbitmq
@@ -58,6 +59,7 @@ services:
             - query-network
 
     graphql-command-api:
+        restart: unless-stopped
         build: ./jungle-market-graphql-command-api
         ports:
             - "4001:4000"
@@ -67,7 +69,7 @@ services:
             JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
             JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
             JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
-            JUNGLE_MARKET_AMQP_ROUTING_KE: ""
+            JUNGLE_MARKET_AMQP_ROUTING_KEY: ""
         networks:
             - command-network
 

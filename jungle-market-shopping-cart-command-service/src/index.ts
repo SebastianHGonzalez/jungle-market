@@ -3,7 +3,11 @@ import amqp from 'amqplib';
 import getConfig from './config';
 
 const {
-  amqpURL: rabbitURL, exchange, exchangeType, queue, pattern,
+  amqpURL,
+  exchange,
+  exchangeType,
+  queue,
+  pattern,
 } = getConfig();
 
 function onMessage(msg: amqp.ConsumeMessage) {
@@ -13,7 +17,7 @@ function onMessage(msg: amqp.ConsumeMessage) {
 }
 
 amqp
-  .connect(rabbitURL)
+  .connect(amqpURL)
   .then((connection) => connection.createChannel())
   .then((channel) => {
     channel.assertExchange(exchange, exchangeType, { durable: false });
@@ -23,10 +27,8 @@ amqp
         q.queue,
       );
 
-      channel.bindQueue(q.queue, exchange, pattern);
-
-      channel.consume(q.queue, onMessage, {
-        noAck: true,
-      });
+      return channel
+        .bindQueue(q.queue, exchange, pattern)
+        .then(() => channel.consume(q.queue, onMessage, {}));
     });
   });

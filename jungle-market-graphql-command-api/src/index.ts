@@ -42,6 +42,13 @@ amqp
       },
       Mutation: {
         clientPickedProduct: (parent: unknown, args: any) => {
+          console.log(
+            'publishing',
+            'exchange: ',
+            exchange,
+            'routingKey: ',
+            routingKey,
+          );
           channel.publish(
             exchange,
             routingKey,
