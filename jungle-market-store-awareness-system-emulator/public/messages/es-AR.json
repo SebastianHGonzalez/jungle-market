@@ -5,5 +5,8 @@
   "previous": "Anterior",
   "back.toList": "Volver al listado",
 
+  "shoppingCart.customer.label": "Customer",
+  "shoppingCart.products.sku.label": "Producto",
+
   "results.count": "${pageSize} - ${count} Resultados"
 }

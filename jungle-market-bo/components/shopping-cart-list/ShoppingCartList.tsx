@@ -27,7 +27,7 @@ export default function ShoppingCartList({}: Props) {
         <TableHead>
           <TableRow>
             <TableH>
-              <I18n id="shoppingCarts.customer.label" />
+              <I18n id="shoppingCart.customer.label" />
             </TableH>
             <TableH>
               <I18n id="shoppingCats.products.label" />

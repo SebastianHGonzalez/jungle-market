@@ -1,20 +1,52 @@
 import React, { useCallback } from 'react';
-import useQueryState from 'hooks/useQueryState';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
-type Props = React.Props<any>
+import Label from 'components/common/input/Label';
+import I18n from 'components/common/i18n';
+import TextField from 'components/common/formik/TextField';
+import Button from 'components/common/input/Button';
+import useCustomerPickedProduct from 'hooks/useCustomerPickedProduct';
 
-export default function BranchDashboard(props: Props) {
-  const [[foo], setFoo] = useQueryState('foo', 0);
-  const inc = useCallback(() => setFoo(Math.random() * 10), [setFoo, foo]);
+type Props = React.Props<any>;
+
+export default function EmulatorDashboard(props: Props) {
+  const [execCustomerPickedProduct, { loading }] = useCustomerPickedProduct();
+  const addProductToShoppingCart = useCallback(
+    (variables) => execCustomerPickedProduct({ variables }),
+    [execCustomerPickedProduct],
+  );
   return (
     <div>
-      foo:
-      {' '}
-      {foo}
-      {' '}
-      <button type="button" onClick={inc} style={{ backgroundColor: 'red' }}>
-        button
-      </button>
+      <Formik
+        initialValues={{
+          customerId: '',
+          skuId: '',
+        }}
+        validationSchema={Yup.object({
+          customerId: Yup.string()
+            .trim()
+            .required(),
+          skuId: Yup.string()
+            .trim()
+            .required(),
+        })}
+        onSubmit={addProductToShoppingCart}
+      >
+        <Form>
+          <Label>
+            <I18n id="shoppingCart.customer.label" />
+            <Field name="customerId" component={TextField} />
+          </Label>
+          <Label>
+            <I18n id="shoppingCart.products.sku.label" />
+            <Field name="skuId" component={TextField} />
+          </Label>
+          <Button type="submit" disabled={loading}>
+            Enviar
+          </Button>
+        </Form>
+      </Formik>
     </div>
   );
 }
