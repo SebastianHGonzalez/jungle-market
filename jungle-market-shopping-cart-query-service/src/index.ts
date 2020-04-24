@@ -1,4 +1,25 @@
 import { ApolloServer, gql } from 'apollo-server';
+import mongoose from 'mongoose';
+
+import './model';
+import getConfig from './config';
+import getBranchShoppingCarts from './services/getBranchShoppingCarts';
+
+const { mongoURL } = getConfig();
+
+
+class ApplicationError extends Error {
+  log(logger: typeof console) {
+    logger.error('Application Error:', this.code, this.message);
+  }
+
+  public readonly code: number;
+
+  constructor(code: number, message: string) {
+    super(message);
+    this.code = code;
+  }
+}
 
 const typeDefs = gql`
   type Sku {
@@ -37,23 +58,12 @@ const branches = [{ id: '1' }];
 
 const customers = [{ id: '2' }];
 
-const skus = [{ id: '3' }];
-
-const shoppingCarts = [
-  {
-    id: '4',
-    branchId: '1',
-    customerId: '2',
-    products: [{ count: 2, skuId: '3' }],
-  },
-];
+const skus = [{ id: 'sku1' }];
 
 const resolvers = {
   Query: {
     shoppingCarts: (parent: unknown, args: any) => ({
-      shoppingCarts: shoppingCarts.filter(
-        ({ branchId }) => branchId === args.branchId,
-      ),
+      shoppingCarts: getBranchShoppingCarts(args.branchId),
     }),
   },
   ShoppingCart: {
@@ -61,13 +71,27 @@ const resolvers = {
     customer: (shoppingCart: any) => customers.find(({ id }) => id === shoppingCart.customerId),
   },
   ShoppingCartProduct: {
-    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.skuId),
+    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct),
   },
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
-// The `listen` method launches a web server.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+mongoose
+  .connect(mongoURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .catch((error) => {
+    throw new ApplicationError(510, error);
+  })
+  .then(() => (
+    // The `listen` method launches a web server.
+    server.listen().then(({ url }) => {
+      console.log(`🚀  Server ready at ${url}`);
+    })))
+  .catch((error) => {
+    // eslint-disable-next-line no-unused-expressions
+    error.log && error.log(console);
+    process.exit(error.code || 500);
+  });

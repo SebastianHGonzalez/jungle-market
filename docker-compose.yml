@@ -58,6 +58,8 @@ services:
     shopping-cart-query-service:
         restart: unless-stopped
         build: ./jungle-market-shopping-cart-query-service
+        environment:
+            JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
         networks:
             - query-network
             - shopping-cart-network

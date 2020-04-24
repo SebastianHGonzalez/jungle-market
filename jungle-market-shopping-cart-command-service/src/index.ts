@@ -22,10 +22,12 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
       case 'clientPickedProduct':
         console.info('received message');
         addProductToCart(payload.clientId, payload.skuId)
-          .then(() => {
+          .then((v) => {
+            console.info("Success: addProductToCart", v)
             channel.ack(msg);
           })
-          .catch(() => {
+          .catch((error) => {
+            console.error("Error: addProductToCart", error);
             channel.nack(msg, false, true);
           });
         break;
@@ -73,7 +75,7 @@ mongoose
 
       return channel
         .bindQueue(q.queue, exchange, pattern)
-        .then(() => channel.consume(q.queue, (msg) => onMessage(channel, msg), { noAck: true }));
+        .then(() => channel.consume(q.queue, (msg) => onMessage(channel, msg), { }));
     });
   })
   .catch((error) => {
