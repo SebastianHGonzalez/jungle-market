@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Table = styled.table`
+  width: 100%;
   background: ${({ theme }) => theme.table.head.background};
   border-collapse: collapse;
 `;
