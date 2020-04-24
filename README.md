@@ -9,7 +9,13 @@ event driven mini shopping system.
 
 ## Development
 
-start services
+- Configure env varibles
+
+```bash
+cp example.env .env
+```
+
+- start services
 
 ```bash
 docker-compose <start|up> rabbitmq [api]
