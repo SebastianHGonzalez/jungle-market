@@ -19,9 +19,9 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
     const { type, ...payload } = JSON.parse(msg.content.toString());
 
     switch (type) {
-      case 'clientPickedProduct':
+      case 'customerPickedProduct':
         console.info('received message');
-        addProductToCart(payload.clientId, payload.skuId)
+        addProductToCart(payload.customerId, payload.skuId)
           .then((v) => {
             console.info("Success: addProductToCart", v)
             channel.ack(msg);

@@ -19,8 +19,8 @@ amqp
     });
 
     const typeDefs = gql`
-      type ClientPickedProductMutationResponse {
-        clientId: ID
+      type CustomerPickedProductMutationResponse {
+        customerId: ID
         skuId: ID
       }
 
@@ -29,10 +29,10 @@ amqp
       }
 
       type Mutation {
-        clientPickedProduct(
-          clientId: ID!
+        customerPickedProduct(
+          customerId: ID!
           skuId: ID!
-        ): ClientPickedProductMutationResponse
+        ): CustomerPickedProductMutationResponse
       }
     `;
 
@@ -41,7 +41,7 @@ amqp
         dummy: () => 'ok',
       },
       Mutation: {
-        clientPickedProduct: (parent: unknown, args: any) => {
+        customerPickedProduct: (parent: unknown, args: any) => {
           console.log(
             'publishing',
             'exchange: ',
@@ -54,15 +54,15 @@ amqp
             routingKey,
             Buffer.from(
               JSON.stringify({
-                type: 'clientPickedProduct',
-                clientId: args.clientId,
+                type: 'customerPickedProduct',
+                customerId: args.customerId,
                 skuId: args.skuId,
               }),
             ),
           );
 
           return {
-            clientId: args.clientId,
+            customerId: args.customerId,
             skuId: args.skuId,
           };
         },

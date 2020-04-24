@@ -7,7 +7,6 @@ import getBranchShoppingCarts from './services/getBranchShoppingCarts';
 
 const { mongoURL } = getConfig();
 
-
 class ApplicationError extends Error {
   log(logger: typeof console) {
     logger.error('Application Error:', this.code, this.message);
@@ -54,11 +53,11 @@ const typeDefs = gql`
   }
 `;
 
-const branches = [{ id: '1' }];
+const branches = [{ id: 'branch1' }, { id: 'branch2' }];
 
-const customers = [{ id: '2' }];
+const customers = [{ id: 'customer1' }, { id: 'customer2' }];
 
-const skus = [{ id: 'sku1' }];
+const skus = [{ id: 'sku1' }, { id: 'sku2' }];
 
 const resolvers = {
   Query: {
@@ -69,9 +68,15 @@ const resolvers = {
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
     customer: (shoppingCart: any) => customers.find(({ id }) => id === shoppingCart.customerId),
+    products: (shoppingCart: any) => Object.entries(
+      shoppingCart.products.reduce(
+        (acc: any, curr: string) => Object.assign(acc, { [curr]: (acc[curr] || 0) + 1 }),
+        {},
+      ),
+    ).map(([skuId, count]) => ({ skuId, count })),
   },
   ShoppingCartProduct: {
-    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct),
+    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.skuId),
   },
 };
 
@@ -85,11 +90,11 @@ mongoose
   .catch((error) => {
     throw new ApplicationError(510, error);
   })
-  .then(() => (
+  .then(() =>
     // The `listen` method launches a web server.
     server.listen().then(({ url }) => {
       console.log(`🚀  Server ready at ${url}`);
-    })))
+    }))
   .catch((error) => {
     // eslint-disable-next-line no-unused-expressions
     error.log && error.log(console);
