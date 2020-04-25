@@ -25,7 +25,7 @@ RUN npm i --only=prod
 
 COPY --from=build /usr/src/app/.next ./.next
 
-COPY --from=build /usr/src/app/server.js ./server.js
+COPY --from=build /usr/src/app/server ./server
 
 COPY --from=build /usr/src/app/next.config.js ./next.config.js
 

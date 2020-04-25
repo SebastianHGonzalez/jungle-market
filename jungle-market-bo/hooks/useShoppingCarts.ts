@@ -24,19 +24,21 @@ const GET_SHOPPING_CARTS = gql`
 
 type ShoppingCartsQueryResponse = {
   shoppingCarts: {
-    branch?: string;
-    customer: {
-      id: string;
-    };
-    products: [
-      {
-        count: number;
-        sku: {
-          id: string;
-        };
-      }
-    ];
-  }[];
+    shoppingCarts: {
+      branch?: string;
+      customer: {
+        id: string;
+      };
+      products: [
+        {
+          count: number;
+          sku: {
+            id: string;
+          };
+        }
+      ];
+    }[];
+  };
 };
 
 export default function useShoppingCarts() {

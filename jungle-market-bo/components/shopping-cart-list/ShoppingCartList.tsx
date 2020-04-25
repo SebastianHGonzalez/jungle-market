@@ -16,7 +16,7 @@ type Props = React.Props<any>;
 
 export default function ShoppingCartList({}: Props) {
   const { data, loading, error } = useShoppingCarts();
-  const { shoppingCarts = [] } = data || {};
+  const shoppingCarts = data?.shoppingCarts?.shoppingCarts ?? [];
 
   return (
     <div>
@@ -35,31 +35,29 @@ export default function ShoppingCartList({}: Props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {shoppingCarts
-            && shoppingCarts.map
-            && shoppingCarts.map(({ customer, products }) => (
-              <TableRow>
-                <TableData>
-                  <Value>{customer}</Value>
-                </TableData>
-                <TableData>
-                  {products
-                    && products.map
-                    && products.map(({ sku, count }) => (
-                      <>
-                        <Value>
-                          <I18n id="shoppingCart.products.sku.label" />
-                          {sku}
-                        </Value>
-                        <ValueDetail>
-                          <I18n id="shoppingCart.products.count.label" />
-                          {count}
-                        </ValueDetail>
-                      </>
-                    ))}
-                </TableData>
-              </TableRow>
-            ))}
+          {shoppingCarts.map(({ customer, products }) => (
+            <TableRow>
+              <TableData>
+                <Value>{customer?.id}</Value>
+              </TableData>
+              <TableData>
+                {products.map(({ sku, count }) => (
+                  <>
+                    <Value>
+                      <I18n id="shoppingCart.products.sku.label" />
+                      {': '}
+                      {sku?.id}
+                    </Value>
+                    <ValueDetail>
+                      <I18n id="shoppingCart.products.count.label" />
+                      {': '}
+                      {count}
+                    </ValueDetail>
+                  </>
+                ))}
+              </TableData>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config();
 const express = require('express');
 const next = require('next');
-const proxy = require('express-http-proxy');
+const { ApolloServer } = require('apollo-server-express');
 
 const http = require('http');
 
-const getConfig = require('./next.config.js');
+const graphQLSchema = require('./graphql');
+const getConfig = require('../next.config.js');
 
 const {
-  jungleMarketCommandApiEndpoint,
   PORT,
   ENV,
 } = getConfig.serverRuntimeConfig;
@@ -39,11 +38,14 @@ app
     return server;
   })
 
-  .then((server) => {
-    server.use(
-      '/graphql',
-      proxy(jungleMarketCommandApiEndpoint),
-    );
+  .then(async (server) => {
+    const schema = await graphQLSchema();
+
+    const apolloServer = new ApolloServer({
+      schema,
+    });
+
+    apolloServer.applyMiddleware({ app: server, path: '/graphql' });
 
     server.get('*', (req, res) => handle(req, res));
     return server;

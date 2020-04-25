@@ -7,6 +7,8 @@
 
   "shoppingCart.customer.label": "Customer",
   "shoppingCart.products.sku.label": "Producto",
+  "shoppingCart.products.count.label": "Cantidad",
+  "shoppingCart.products.label": "Productos",
 
   "results.count": "${pageSize} - ${count} Resultados"
 }

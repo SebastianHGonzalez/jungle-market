@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   serverRuntimeConfig: {
     ENV: process.env.NODE_ENV || 'development',
