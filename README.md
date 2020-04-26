@@ -4,12 +4,16 @@
 
 event driven mini shopping system.
 
-## Prerequisites
+## Objective (Needs completing)
+
+## Run project
+
+### Prerequisites
 
 - Docker
 - Docker Compose
 
-## Development
+### Development
 
 - Configure env varibles
 
