@@ -1,5 +1,7 @@
 # jungle-market
 
+![alt text](./logo.svg "Logo")
+
 event driven mini shopping system.
 
 ## Prerequisites
