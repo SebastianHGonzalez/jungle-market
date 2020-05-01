@@ -8,11 +8,19 @@ import Label from 'components/common/input/Label';
 import I18n from 'components/common/i18n';
 import TextField from 'components/common/formik/TextField';
 import Button from 'components/common/input/Button';
+import ClientDashboard from 'components/emulator-dashboard/ClientDashboard';
 
 import useCustomerPickedProduct from 'hooks/useCustomerPickedProduct';
 import useBranch from 'hooks/useBranch';
 
 const Section = styled.section``;
+
+const ClientList = styled.ul`
+  margin: -1em;
+`;
+const ClientListItem = styled.li`
+  margin: 1em;
+`;
 
 type Props = React.Props<any>;
 
@@ -37,11 +45,13 @@ export default function EmulatorDashboard(props: Props) {
       </Section>
 
       <Section>
-        <ul>
-          {clients.map(({ nonce }) => (
-            <li>{nonce}</li>
+        <ClientList>
+          {clients.map(({ nonce, id }) => (
+            <ClientListItem key={nonce}>
+              <ClientDashboard id={id} nonce={nonce} />
+            </ClientListItem>
           ))}
-        </ul>
+        </ClientList>
       </Section>
 
       <Formik

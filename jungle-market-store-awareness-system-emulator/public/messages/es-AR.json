@@ -5,6 +5,12 @@
   "previous": "Anterior",
   "back.toList": "Volver al listado",
 
+  "branch.client.enters": "Nuevo cliente",
+
+  "client.nonce.label": "Nonce",
+  "client.id.label": "Id",
+  "client.id.unknown.label": "No identificado",
+
   "shoppingCart.customer.label": "Customer",
   "shoppingCart.products.sku.label": "Producto",
   "shoppingCart.products.count.label": "Cantidad",
