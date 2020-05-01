@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const fetch = require('node-fetch');
+const fetch = require('isomorphic-unfetch');
 const { setContext } = require('apollo-link-context');
 const { createHttpLink } = require('apollo-link-http');
 const {
