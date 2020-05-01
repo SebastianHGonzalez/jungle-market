@@ -27,6 +27,8 @@ COPY --from=build /usr/src/app/.next ./.next
 
 COPY --from=build /usr/src/app/server ./server
 
+COPY --from=build /usr/src/app/public ./public
+
 COPY --from=build /usr/src/app/next.config.js ./next.config.js
 
 CMD [ "npm", "start" ]
