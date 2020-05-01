@@ -1,12 +1,18 @@
 import React, { useCallback } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import styled from 'styled-components';
 
+import { Main } from 'components/common/layout';
 import Label from 'components/common/input/Label';
 import I18n from 'components/common/i18n';
 import TextField from 'components/common/formik/TextField';
 import Button from 'components/common/input/Button';
+
 import useCustomerPickedProduct from 'hooks/useCustomerPickedProduct';
+import useBranch from 'hooks/useBranch';
+
+const Section = styled.section``;
 
 type Props = React.Props<any>;
 
@@ -16,8 +22,28 @@ export default function EmulatorDashboard(props: Props) {
     (variables) => execCustomerPickedProduct({ variables }),
     [execCustomerPickedProduct],
   );
+
+  // TODO: parametrize this argument
+  const branchId = 'branch1';
+
+  const { clients, onClientEnters } = useBranch(branchId);
+
   return (
-    <div>
+    <Main>
+      <Section>
+        <Button onClick={onClientEnters}>
+          <I18n id="branch.client.enters" />
+        </Button>
+      </Section>
+
+      <Section>
+        <ul>
+          {clients.map(({ nonce }) => (
+            <li>{nonce}</li>
+          ))}
+        </ul>
+      </Section>
+
       <Formik
         initialValues={{
           customerId: '',
@@ -47,6 +73,6 @@ export default function EmulatorDashboard(props: Props) {
           </Button>
         </Form>
       </Formik>
-    </div>
+    </Main>
   );
 }

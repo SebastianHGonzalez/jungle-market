@@ -47,7 +47,7 @@ app
 
     apolloServer.applyMiddleware({ app: server, path: '/graphql' });
 
-    server.get('*', (req, res) => handle(req, res));
+    server.use(handle);
     return server;
   })
 
