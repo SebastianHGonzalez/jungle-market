@@ -10,6 +10,7 @@
   "client.nonce.label": "Nonce",
   "client.id.label": "Id",
   "client.id.unknown.label": "No identificado",
+  "client.identify.label": "Identificar",
 
   "shoppingCart.customer.label": "Customer",
   "shoppingCart.products.sku.label": "Producto",

@@ -34,7 +34,7 @@ export default function EmulatorDashboard(props: Props) {
   // TODO: parametrize this argument
   const branchId = 'branch1';
 
-  const { clients, onClientEnters } = useBranch(branchId);
+  const { clients, onClientEnters, onClientIdentified } = useBranch(branchId);
 
   return (
     <Main>
@@ -48,7 +48,7 @@ export default function EmulatorDashboard(props: Props) {
         <ClientList>
           {clients.map(({ nonce, id }) => (
             <ClientListItem key={nonce}>
-              <ClientDashboard id={id} nonce={nonce} />
+              <ClientDashboard id={id} nonce={nonce} onIdentify={onClientIdentified} />
             </ClientListItem>
           ))}
         </ClientList>

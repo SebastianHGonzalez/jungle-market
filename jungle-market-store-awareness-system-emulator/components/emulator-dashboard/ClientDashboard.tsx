@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+
 import { Value, ValueDetail } from 'components/common/layout/Table';
 import I18n from 'components/common/i18n';
+import Button from 'components/common/input/Button';
+import TextField from 'components/common/formik/TextField';
 
 interface Props extends React.Props<never> {
   id?: string;
   nonce: string;
+
+  onIdentify: (nonce: string, id: string) => void;
 }
 
 const ClientProfilePicture = styled.div`
@@ -24,7 +31,14 @@ const ClientDashboardWrapper = styled.div`
   grid-template-columns: max-content 1fr;
 `;
 
-export default function ClientDashboard({ id, nonce }: Props) {
+export default function ClientDashboard({ id, nonce, onIdentify }: Props) {
+  const handleIdentify = useCallback(
+    ({ clientId }) => {
+      onIdentify(nonce, clientId);
+    },
+    [nonce],
+  );
+
   return (
     <ClientDashboardWrapper>
       <ClientProfilePicture />
@@ -34,11 +48,34 @@ export default function ClientDashboard({ id, nonce }: Props) {
           {': '}
           <ValueDetail as="span">{nonce}</ValueDetail>
         </Value>
-        <Value>
-          <I18n id="client.id.label" />
-          {': '}
-          <ValueDetail as="span">{id}</ValueDetail>
-        </Value>
+        {id && (
+          <Value>
+            <I18n id="client.id.label" />
+            {': '}
+            <ValueDetail as="span">{id}</ValueDetail>
+          </Value>
+        )}
+
+        {!id && (
+          <Formik
+            initialValues={{
+              clientId: id,
+            }}
+            validationSchema={Yup.object({
+              clientId: Yup.string()
+                .trim()
+                .required(),
+            })}
+            onSubmit={handleIdentify}
+          >
+            <Form>
+              <Field name="clientId" component={TextField} />
+              <Button type="submit">
+                <I18n id="client.identify.label" />
+              </Button>
+            </Form>
+          </Formik>
+        )}
       </ClientDetails>
     </ClientDashboardWrapper>
   );

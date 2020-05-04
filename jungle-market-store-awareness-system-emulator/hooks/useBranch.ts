@@ -38,11 +38,13 @@ interface Client {
 interface H {
   clients: Client[];
   onClientEnters: () => void;
+  onClientIdentified: (nonce: string, id: string) => void;
 }
 
 // Action types
 const actionTypes = {
   clientEnteredBranch: 'branch/CLIENT_ENTERED',
+  clientIdentified: 'branch/CLIENT_IDENTIFIED',
 };
 
 // Action creators
@@ -54,7 +56,17 @@ function clientEnteredBranch(branchId) {
     },
     client: {
       nonce: uuidv4(),
-      clientId: null,
+      id: undefined,
+    },
+  };
+}
+
+function clientIdentified(nonce: string, id: string) {
+  return {
+    type: actionTypes.clientIdentified,
+    client: {
+      nonce,
+      id,
     },
   };
 }
@@ -69,6 +81,11 @@ function clientsByNonceReducer(state, { type, client }) {
   switch (type) {
     case actionTypes.clientEnteredBranch:
       return { ...state, [client.nonce]: client };
+    case actionTypes.clientIdentified:
+      return {
+        ...state,
+        [client.nonce]: { ...state[client.nonce], ...client },
+      };
     default:
       return state;
   }
@@ -129,8 +146,13 @@ export default function useBranch(branchId): H {
     dispatch(clientEnteredBranch(branchId));
   }, [dispatch, branchId]);
 
+  const onClientIdentified = useCallback((nonce, id) => {
+    dispatch(clientIdentified(nonce, id));
+  }, []);
+
   return {
     clients,
     onClientEnters,
+    onClientIdentified,
   };
 }
