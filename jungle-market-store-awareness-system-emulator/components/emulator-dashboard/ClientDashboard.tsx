@@ -13,6 +13,7 @@ interface Props extends React.Props<never> {
   nonce: string;
 
   onIdentify: (nonce: string, id: string) => void;
+  onLeave: (nonce: string) => void;
 }
 
 const ClientProfilePicture = styled.div`
@@ -31,13 +32,22 @@ const ClientDashboardWrapper = styled.div`
   grid-template-columns: max-content 1fr;
 `;
 
-export default function ClientDashboard({ id, nonce, onIdentify }: Props) {
+export default function ClientDashboard({
+  id,
+  nonce,
+  onIdentify,
+  onLeave,
+}: Props) {
   const handleIdentify = useCallback(
     ({ clientId }) => {
       onIdentify(nonce, clientId);
     },
     [nonce],
   );
+
+  const handleLeave = useCallback(() => {
+    onLeave(nonce);
+  }, [onLeave, nonce]);
 
   return (
     <ClientDashboardWrapper>
@@ -55,6 +65,9 @@ export default function ClientDashboard({ id, nonce, onIdentify }: Props) {
             <ValueDetail as="span">{id}</ValueDetail>
           </Value>
         )}
+        <Button onClick={handleLeave}>
+          <I18n id="client.leave.label" />
+        </Button>
 
         {!id && (
           <Formik

@@ -5,12 +5,13 @@
   "previous": "Anterior",
   "back.toList": "Volver al listado",
 
-  "branch.client.enters": "Nuevo cliente",
+  "branch.client.enters": "Cliente ingresa a la tienda",
 
   "client.nonce.label": "Nonce",
   "client.id.label": "Id",
   "client.id.unknown.label": "No identificado",
   "client.identify.label": "Identificar",
+  "client.leave.label": "Salir de la tienda",
 
   "shoppingCart.customer.label": "Customer",
   "shoppingCart.products.sku.label": "Producto",

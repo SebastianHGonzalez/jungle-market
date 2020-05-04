@@ -39,12 +39,14 @@ interface H {
   clients: Client[];
   onClientEnters: () => void;
   onClientIdentified: (nonce: string, id: string) => void;
+  onClientLeaves: (nonce: string) => void;
 }
 
 // Action types
 const actionTypes = {
   clientEnteredBranch: 'branch/CLIENT_ENTERED',
   clientIdentified: 'branch/CLIENT_IDENTIFIED',
+  clientLeaves: 'branch/CLIENT_LEAVES',
 };
 
 // Action creators
@@ -71,6 +73,15 @@ function clientIdentified(nonce: string, id: string) {
   };
 }
 
+function clientLeaves(nonce: string) {
+  return {
+    type: actionTypes.clientLeaves,
+    client: {
+      nonce,
+    },
+  };
+}
+
 // Selectors
 function getClients(state): Client[] {
   return Object.values(state.clients.byNonce);
@@ -86,6 +97,11 @@ function clientsByNonceReducer(state, { type, client }) {
         ...state,
         [client.nonce]: { ...state[client.nonce], ...client },
       };
+    case actionTypes.clientLeaves:
+      // eslint-disable-next-line no-case-declarations
+      const newState = { ...state, [client.nonce]: null };
+      delete newState[client.nonce];
+      return newState;
     default:
       return state;
   }
@@ -150,9 +166,14 @@ export default function useBranch(branchId): H {
     dispatch(clientIdentified(nonce, id));
   }, []);
 
+  const onClientLeaves = useCallback((nonce) => {
+    dispatch(clientLeaves(nonce));
+  }, []);
+
   return {
     clients,
     onClientEnters,
     onClientIdentified,
+    onClientLeaves,
   };
 }
