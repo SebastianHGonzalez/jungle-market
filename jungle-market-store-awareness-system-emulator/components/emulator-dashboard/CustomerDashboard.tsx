@@ -69,8 +69,9 @@ export default function CustomerDashboard({
     [nonce],
   );
 
-  const handleProductPicked = useCallback((p) => {
+  const handleProductPicked = useCallback((p, { resetForm }) => {
     onProductPicked(p.nonce, p.skuId);
+    resetForm();
   }, []);
 
   const handleLeave = useCallback(() => {
