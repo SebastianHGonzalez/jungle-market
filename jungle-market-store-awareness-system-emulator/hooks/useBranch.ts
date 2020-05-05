@@ -10,11 +10,11 @@ type Id = string;
 interface Action {
   type: string;
   branch?: Branch;
-  client?: Client;
+  customer?: Customer;
 }
 
-interface ClientsState {
-  byNonce: { [nonce: string]: Client };
+interface CustomersState {
+  byNonce: { [nonce: string]: Customer };
 }
 
 interface BranchesState {
@@ -22,7 +22,7 @@ interface BranchesState {
 }
 
 interface State {
-  clients: ClientsState;
+  customers: CustomersState;
   branches: BranchesState;
 }
 
@@ -30,95 +30,153 @@ interface Branch {
   id: Id;
 }
 
-interface Client {
+interface Customer {
   nonce: string;
   id?: Id;
 }
 
+interface ShoppingCart {
+  [skuId: string]: number;
+}
+
 interface H {
-  clients: Client[];
-  onClientEnters: () => void;
-  onClientIdentified: (nonce: string, id: string) => void;
-  onClientLeaves: (nonce: string) => void;
+  customers: { [nonce: string]: Customer };
+  shoppingCarts: { [customerNonce: string]: ShoppingCart };
+
+  onCustomerEnters: () => void;
+  onCustomerIdentified: (nonce: string, id: string) => void;
+  onCustomerPickedProduct: (nonce: string, skuId: string) => void;
+  onCustomerLeaves: (nonce: string) => void;
 }
 
 // Action types
 const actionTypes = {
-  clientEnteredBranch: 'branch/CLIENT_ENTERED',
-  clientIdentified: 'branch/CLIENT_IDENTIFIED',
-  clientLeaves: 'branch/CLIENT_LEAVES',
+  customerEnteredBranch: 'branch/CUSTOMER_ENTERED',
+  customerIdentified: 'branch/CUSTOMER_IDENTIFIED',
+  customerPickedProduct: 'branch/CUSTOMER_PICKED_PRODUCT',
+  customerLeaves: 'branch/CUSTOMER_LEAVES',
 };
 
 // Action creators
-function clientEnteredBranch(branchId) {
+function customerEnteredBranch(branchId) {
   return {
-    type: actionTypes.clientEnteredBranch,
+    type: actionTypes.customerEnteredBranch,
     branch: {
       id: branchId,
     },
-    client: {
+    customer: {
       nonce: uuidv4(),
       id: undefined,
     },
   };
 }
 
-function clientIdentified(nonce: string, id: string) {
+function customerIdentified(nonce: string, id: string) {
   return {
-    type: actionTypes.clientIdentified,
-    client: {
+    type: actionTypes.customerIdentified,
+    customer: {
       nonce,
       id,
     },
   };
 }
 
-function clientLeaves(nonce: string) {
+function customerPickedProduct(nonce: string, skuId: string) {
   return {
-    type: actionTypes.clientLeaves,
-    client: {
+    type: actionTypes.customerPickedProduct,
+    customer: {
+      nonce,
+    },
+    sku: {
+      id: skuId,
+    },
+  };
+}
+
+function customerLeaves(nonce: string) {
+  return {
+    type: actionTypes.customerLeaves,
+    customer: {
       nonce,
     },
   };
 }
 
 // Selectors
-function getClients(state): Client[] {
-  return Object.values(state.clients.byNonce);
+function getCustomers(state): { [nonce: string]: Customer } {
+  return state.customers.byNonce;
+}
+
+function getShoppingCarts(state): { [customerNonce: string]: ShoppingCart } {
+  return state.shoppingCarts.byCustomerNonce;
 }
 
 // Reducer
-function clientsByNonceReducer(state, { type, client }) {
+function shoppingCartReducer(state, { type, sku }) {
   switch (type) {
-    case actionTypes.clientEnteredBranch:
-      return { ...state, [client.nonce]: client };
-    case actionTypes.clientIdentified:
+    case actionTypes.customerPickedProduct:
+      return { ...state, [sku.id]: (state[sku.id] || 0) + 1 };
+    default:
+      return state;
+  }
+}
+
+function shoppingCartsByCustomerNonceReducer(state, action) {
+  const { type, customer } = action;
+  switch (type) {
+    case actionTypes.customerEnteredBranch:
       return {
         ...state,
-        [client.nonce]: { ...state[client.nonce], ...client },
+        [customer.nonce]: {},
       };
-    case actionTypes.clientLeaves:
+
+    case actionTypes.customerPickedProduct:
+      return {
+        ...state,
+        [customer.nonce]: shoppingCartReducer(state[customer.nonce], action),
+      };
+    default:
+      return state;
+  }
+}
+
+const shoppingCartsReducer = combineReducers({
+  byCustomerNonce: shoppingCartsByCustomerNonceReducer,
+});
+
+function customersByNonceReducer(state, { type, customer }) {
+  switch (type) {
+    case actionTypes.customerEnteredBranch:
+      return { ...state, [customer.nonce]: customer };
+    case actionTypes.customerIdentified:
+      return {
+        ...state,
+        [customer.nonce]: { ...state[customer.nonce], ...customer },
+      };
+    case actionTypes.customerLeaves:
       // eslint-disable-next-line no-case-declarations
-      const newState = { ...state, [client.nonce]: null };
-      delete newState[client.nonce];
+      const newState = { ...state, [customer.nonce]: null };
+      delete newState[customer.nonce];
       return newState;
     default:
       return state;
   }
 }
 
-const clientsReducer = combineReducers({
-  byNonce: clientsByNonceReducer,
+const customersReducer = combineReducers({
+  byNonce: customersByNonceReducer,
 });
 
-function branchesByIdReducer(state, { type, branch, client }) {
+function branchesByIdReducer(state, { type, branch, customer }) {
   switch (type) {
-    case actionTypes.clientEnteredBranch:
+    case actionTypes.customerEnteredBranch:
       return {
         ...state,
         [branch.id]: {
           ...state[branch.id],
-          clientNonces: state[branch.id].clientNonces.concat(client.nonce),
+          customerNonces: state[branch.id].customerNonces.concat(
+            customer.nonce,
+          ),
         },
       };
     default:
@@ -131,13 +189,14 @@ const branchesReducer = combineReducers({
 });
 
 const reducer: Reducer<State, Action> = combineReducers({
-  clients: clientsReducer,
+  shoppingCarts: shoppingCartsReducer,
+  customers: customersReducer,
   branches: branchesReducer,
 }) as never;
 
 function initializer(branchId) {
   return {
-    clients: {
+    customers: {
       byNonce: {},
     },
 
@@ -145,9 +204,13 @@ function initializer(branchId) {
       byId: {
         [branchId]: {
           id: branchId,
-          clientNonces: [],
+          customerNonces: [],
         },
       },
+    },
+
+    shoppingCarts: {
+      byCustomerNonce: {},
     },
   };
 }
@@ -156,24 +219,31 @@ function initializer(branchId) {
 export default function useBranch(branchId): H {
   const [state, dispatch] = useReducer(reducer, branchId, initializer);
 
-  const clients = useMemo(() => getClients(state), [state]);
+  const customers = useMemo(() => getCustomers(state), [state]);
+  const shoppingCarts = useMemo(() => getShoppingCarts(state), [state]);
 
-  const onClientEnters = useCallback(() => {
-    dispatch(clientEnteredBranch(branchId));
+  const onCustomerEnters = useCallback(() => {
+    dispatch(customerEnteredBranch(branchId));
   }, [dispatch, branchId]);
 
-  const onClientIdentified = useCallback((nonce, id) => {
-    dispatch(clientIdentified(nonce, id));
+  const onCustomerIdentified = useCallback((nonce, id) => {
+    dispatch(customerIdentified(nonce, id));
   }, []);
 
-  const onClientLeaves = useCallback((nonce) => {
-    dispatch(clientLeaves(nonce));
+  const onCustomerPickedProduct = useCallback((nonce, skuId) => {
+    dispatch(customerPickedProduct(nonce, skuId));
+  }, []);
+
+  const onCustomerLeaves = useCallback((nonce) => {
+    dispatch(customerLeaves(nonce));
   }, []);
 
   return {
-    clients,
-    onClientEnters,
-    onClientIdentified,
-    onClientLeaves,
+    customers,
+    shoppingCarts,
+    onCustomerEnters,
+    onCustomerIdentified,
+    onCustomerPickedProduct,
+    onCustomerLeaves,
   };
 }

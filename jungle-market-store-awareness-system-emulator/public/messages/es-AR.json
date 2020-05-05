@@ -1,19 +1,22 @@
 {
-  "app.name": "Emulator",
+  "app.name": "Emulador de tienda",
 
   "next": "Siguiente",
   "previous": "Anterior",
   "back.toList": "Volver al listado",
 
-  "branch.client.enters": "Cliente ingresa a la tienda",
+  "branch.customer.enters": "Cliente ingresa a la tienda",
 
-  "client.nonce.label": "Nonce",
-  "client.id.label": "Id",
-  "client.id.unknown.label": "No identificado",
-  "client.identify.label": "Identificar",
-  "client.leave.label": "Salir de la tienda",
+  "customer.label": "Cliente",
+  "customer.nonce.label": "Nonce",
+  "customer.id.label": "Id",
+  "customer.id.unknown.label": "No identificado",
+  "customer.identify.label": "Identificar",
+  "customer.leave.label": "Salir de la tienda",
+  "customer.picked.product.label": "Tomar producto",
 
-  "shoppingCart.customer.label": "Customer",
+  "shoppingCart.label": "Carrito de compra",
+  "shoppingCart.customer.label": "Cliente",
   "shoppingCart.products.sku.label": "Producto",
   "shoppingCart.products.count.label": "Cantidad",
   "shoppingCart.products.label": "Productos",

@@ -1,12 +1,14 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import Padding from "./Padding";
+import Padding from './Padding';
 
 const Main = styled.main`
   display: grid;
   grid-area: main;
   ${Padding}
-  margin-block-end: 1rem;
+
+  grid-auto-rows: min-content;
+  grid-gap: 1rem;
 `;
 
 export default Main;
