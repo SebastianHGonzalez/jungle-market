@@ -2,6 +2,8 @@ import {
   useCallback, useReducer, useMemo, Reducer,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
 
 import combineReducers from 'lib/combineReducers';
 
@@ -58,15 +60,14 @@ const actionTypes = {
 };
 
 // Action creators
-function customerEnteredBranch(branchId) {
+function customerEnteredBranch(branchId, nonce) {
   return {
     type: actionTypes.customerEnteredBranch,
     branch: {
       id: branchId,
     },
     customer: {
-      nonce: uuidv4(),
-      id: undefined,
+      nonce,
     },
   };
 }
@@ -215,27 +216,76 @@ function initializer(branchId) {
   };
 }
 
+// Mutations
+const CUSTOMER_ENTERS_BRANCH = gql`
+  mutation customerEntersBranch($customerNonce: ID!, $branchId: ID!) {
+    customerEntersBranch(customerNonce: $customerNonce, branchId: $branchId) {
+      customerNonce
+      branchId
+    }
+  }
+`;
+
+const CUSTOMER_IDENTIFIED = gql`
+  mutation customerIdentified($customerNonce: ID!, $customerId: ID!) {
+    customerIdentified(customerNonce: $customerNonce, customerId: $customerId) {
+      customerNonce
+      customerId
+    }
+  }
+`;
+
+const CUSTOMER_PICKED_PRODUCT = gql`
+  mutation customerPickedProduct($customerNonce: ID!, $skuId: ID!) {
+    customerPickedProduct(customerNonce: $customerNonce, skuId: $skuId) {
+      customerNonce
+      skuId
+    }
+  }
+`;
+
+const CUSTOMER_LEAVES = gql`
+  mutation customerLeaves($customerNonce: ID!) {
+    customerLeaves(customerNonce: $customerNonce) {
+      customerNonce
+    }
+  }
+`;
+
 // Hook
 export default function useBranch(branchId): H {
+  // Server mutations
+  const [execCustomerEntersBranch] = useMutation(CUSTOMER_ENTERS_BRANCH);
+  const [execCustomerIdentified] = useMutation(CUSTOMER_IDENTIFIED);
+  const [execCustomerPickedProduct] = useMutation(CUSTOMER_PICKED_PRODUCT);
+  const [execCustomerLeaves] = useMutation(CUSTOMER_LEAVES);
+
+  // Internal state
   const [state, dispatch] = useReducer(reducer, branchId, initializer);
 
   const customers = useMemo(() => getCustomers(state), [state]);
   const shoppingCarts = useMemo(() => getShoppingCarts(state), [state]);
 
+  // Callbacks
   const onCustomerEnters = useCallback(() => {
-    dispatch(customerEnteredBranch(branchId));
+    const customerNonce = uuidv4();
+    dispatch(customerEnteredBranch(branchId, customerNonce));
+    execCustomerEntersBranch({ variables: { customerNonce, branchId } });
   }, [dispatch, branchId]);
 
-  const onCustomerIdentified = useCallback((nonce, id) => {
-    dispatch(customerIdentified(nonce, id));
+  const onCustomerIdentified = useCallback((customerNonce, customerId) => {
+    dispatch(customerIdentified(customerNonce, customerId));
+    execCustomerIdentified({ variables: { customerNonce, customerId } });
   }, []);
 
-  const onCustomerPickedProduct = useCallback((nonce, skuId) => {
-    dispatch(customerPickedProduct(nonce, skuId));
+  const onCustomerPickedProduct = useCallback((customerNonce, skuId) => {
+    dispatch(customerPickedProduct(customerNonce, skuId));
+    execCustomerPickedProduct({ variables: { customerNonce, skuId } });
   }, []);
 
-  const onCustomerLeaves = useCallback((nonce) => {
-    dispatch(customerLeaves(nonce));
+  const onCustomerLeaves = useCallback((customerNonce) => {
+    dispatch(customerLeaves(customerNonce));
+    execCustomerLeaves({ variables: { customerNonce } });
   }, []);
 
   return {

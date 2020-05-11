@@ -6,7 +6,6 @@ import I18n from 'components/common/i18n';
 import Button from 'components/common/input/Button';
 import CustomerDashboard from 'components/emulator-dashboard/CustomerDashboard';
 
-import useCustomerPickedProduct from 'hooks/useCustomerPickedProduct';
 import useBranch from 'hooks/useBranch';
 
 import { separatorColor } from 'themes/selectors';
@@ -25,12 +24,6 @@ const CustomerListItem = styled.li`
 type Props = React.Props<any>;
 
 export default function EmulatorDashboard(props: Props) {
-  const [execCustomerPickedProduct, { loading }] = useCustomerPickedProduct();
-  const addProductToShoppingCart = useCallback(
-    (variables) => execCustomerPickedProduct({ variables }),
-    [execCustomerPickedProduct],
-  );
-
   // TODO: parametrize this argument
   const branchId = 'branch1';
 
