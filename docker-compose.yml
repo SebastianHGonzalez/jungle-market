@@ -39,8 +39,7 @@ services:
         ports:
             - "8080:3000"
         environment:
-            JUNGLE_MARKET_QUERY_API_ENDPOINT: "/graphql"
-            JUNGLE_MARKET_QUERY_API_ENDPOINT_PRIVATE: "http://graphql-query-api:4000/"
+            JUNGLE_MARKET_QUERY_API_ENDPOINT: "http://graphql-query-api:4000/"
         networks:
             - query-network
 
@@ -50,8 +49,7 @@ services:
         ports:
             - "8081:3000"
         environment:
-            JUNGLE_MARKET_COMMAND_API_ENDPOINT: "/graphql"
-            JUNGLE_MARKET_COMMAND_API_ENDPOINT_PRIVATE: "http://graphql-command-api:4000/"
+            JUNGLE_MARKET_COMMAND_API_ENDPOINT: "http://graphql-command-api:4000/"
         networks:
             - command-network
 
