@@ -4,10 +4,10 @@ import { ShoppingCartState } from '../model/shoppingCart';
 
 const ShoppingCart = model('ShoppingCart');
 
-export default function addProductToCart(customerNonce: string, skuId: string) {
+export default function closeShoppingCart(customerNonce: string) {
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },
-    { $push: { products: skuId } },
+    { state: ShoppingCartState.CLOSED },
     { new: true, upsert: true },
   );
 }

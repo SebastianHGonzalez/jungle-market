@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 
 import './model';
 import getConfig from './config';
+
 import addProductToCart from './services/addProductToCart';
+import closeShoppingCart from './services/closeShoppingCart';
 
 const {
   mongoURL,
@@ -17,17 +19,26 @@ const {
 function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
   if (msg.content) {
     const { type, ...payload } = JSON.parse(msg.content.toString());
-
     switch (type) {
       case 'customerPickedProduct':
-        console.info('received message');
-        addProductToCart(payload.customerId, payload.skuId)
+        addProductToCart(payload.customerNonce, payload.skuId)
           .then((v) => {
             console.info("Success: addProductToCart", v)
             channel.ack(msg);
           })
-          .catch((error) => {
+          .catch((error: Error) => {
             console.error("Error: addProductToCart", error);
+            channel.nack(msg, false, true);
+          });
+        break;
+      case 'customerLeaves':
+        closeShoppingCart(payload.customerNonce)
+          .then((v) => {
+            console.info("Success: customerLeaves", v)
+            channel.ack(msg);
+          })
+          .catch((error: Error) => {
+            console.error("Error: customerLeaves", error);
             channel.nack(msg, false, true);
           });
         break;
