@@ -19,9 +19,23 @@ amqp
     });
 
     const typeDefs = gql`
+      type CustomerEntersBranchMutationResponse {
+        customerNonce: ID!
+        branchId: ID!
+      }
+
+      type CustomerIdentifiedMutationResponse {
+        customerNonce: ID!
+        customerId: ID!
+      }
+
       type CustomerPickedProductMutationResponse {
-        customerId: ID
+        customerNonce: ID
         skuId: ID
+      }
+
+      type CustomerLeavesMutationResponse {
+        customerNonce: ID!
       }
 
       type Query {
@@ -29,10 +43,24 @@ amqp
       }
 
       type Mutation {
-        customerPickedProduct(
+        customerEntersBranch(
+          customerNonce: ID!
+          branchId: ID!
+        ): CustomerEntersBranchMutationResponse
+
+        customerIdentified(
+          customerNonce: ID!
           customerId: ID!
+        ): CustomerIdentifiedMutationResponse
+
+        customerPickedProduct(
+          customerNonce: ID!
           skuId: ID!
         ): CustomerPickedProductMutationResponse
+      
+        customerLeaves(
+          customerNonce: ID!
+        ): CustomerLeavesMutationResponse
       }
     `;
 
@@ -41,29 +69,74 @@ amqp
         dummy: () => 'ok',
       },
       Mutation: {
-        customerPickedProduct: (parent: unknown, args: any) => {
-          console.log(
-            'publishing',
-            'exchange: ',
+        customerEntersBranch: (parent: unknown, { customerNonce, branchId }: any) => {
+          channel.publish(
             exchange,
-            'routingKey: ',
             routingKey,
+            Buffer.from(
+              JSON.stringify({
+                type: 'customerEntersBranch',
+                customerNonce,
+                branchId,
+              }),
+            ),
           );
+
+          return {
+            customerNonce,
+            branchId,
+          };
+        },
+        customerIdentified: (parent: unknown, { customerNonce, customerId }: any) => {
+          channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(
+              JSON.stringify({
+                type: 'customerIdentified',
+                customerNonce,
+                customerId,
+              }),
+            ),
+          );
+
+          return {
+            customerNonce,
+            customerId,
+          };
+        },
+        customerPickedProduct: (parent: unknown, { customerNonce, skuId }: any) => {
           channel.publish(
             exchange,
             routingKey,
             Buffer.from(
               JSON.stringify({
                 type: 'customerPickedProduct',
-                customerId: args.customerId,
-                skuId: args.skuId,
+                customerNonce,
+                skuId,
               }),
             ),
           );
 
           return {
-            customerId: args.customerId,
-            skuId: args.skuId,
+            customerNonce,
+            skuId,
+          };
+        },
+        customerLeaves: (parent: unknown, { customerNonce }: any) => {
+          channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(
+              JSON.stringify({
+                type: 'customerLeaves',
+                customerNonce,
+              }),
+            ),
+          );
+
+          return {
+            customerNonce
           };
         },
       },
