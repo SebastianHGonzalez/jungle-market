@@ -36,6 +36,8 @@ services:
     back-office:
         restart: unless-stopped
         build: ./jungle-market-bo
+        depends_on:
+            - shopping-cart-query-service
         ports:
             - "8080:3000"
         environment:
@@ -46,6 +48,8 @@ services:
     sas-emulator:
         restart: unless-stopped
         build: ./jungle-market-store-awareness-system-emulator
+        depends_on:
+            - shopping-cart-command-service
         ports:
             - "8081:3000"
         environment:
