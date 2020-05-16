@@ -17,6 +17,7 @@ const GET_SHOPPING_CARTS = gql`
             id
           }
         }
+        state
       }
     }
   }
@@ -37,6 +38,7 @@ type ShoppingCartsQueryResponse = {
           };
         }
       ];
+      state: string;
     }[];
   };
 };

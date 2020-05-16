@@ -42,6 +42,7 @@ const typeDefs = gql`
     branch: Branch
     customer: Customer
     products: [ShoppingCartProduct]
+    state: String
   }
 
   type ShoppingCartsQueryResult {
@@ -74,6 +75,7 @@ const resolvers = {
         {},
       ),
     ).map(([skuId, count]) => ({ skuId, count })),
+    state: (shoppingCart: any) => shoppingCart.state,
   },
   ShoppingCartProduct: {
     sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.skuId),

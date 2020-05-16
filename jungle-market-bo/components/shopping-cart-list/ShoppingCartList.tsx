@@ -1,5 +1,7 @@
 import React from 'react';
+
 import useShoppingCarts from 'hooks/useShoppingCarts';
+
 import {
   Table,
   TableHead,
@@ -11,15 +13,16 @@ import {
   ValueDetail,
 } from 'components/common/layout/Table';
 import I18n from 'components/common/i18n';
+import { Main } from 'components/common/layout';
 
 type Props = React.Props<any>;
 
-export default function ShoppingCartList({}: Props) {
+export default function ShoppingCartList({ }: Props) {
   const { data, loading, error } = useShoppingCarts();
   const shoppingCarts = data?.shoppingCarts?.shoppingCarts ?? [];
 
   return (
-    <div>
+    <Main>
       {loading && 'loading'}
       {error && 'error'}
 
@@ -30,12 +33,15 @@ export default function ShoppingCartList({}: Props) {
               <I18n id="shoppingCart.customer.label" />
             </TableH>
             <TableH>
-              <I18n id="shoppingCats.products.label" />
+              <I18n id="shoppingCart.products.label" />
+            </TableH>
+            <TableH>
+              <I18n id="shoppingCart.state.label" />
             </TableH>
           </TableRow>
         </TableHead>
         <TableBody>
-          {shoppingCarts.map(({ customer, products }) => (
+          {shoppingCarts.map(({ customer, products, state }) => (
             <TableRow>
               <TableData>
                 <Value>{customer?.id}</Value>
@@ -56,10 +62,18 @@ export default function ShoppingCartList({}: Props) {
                   </>
                 ))}
               </TableData>
+              <TableData>
+                <Value>
+                  <I18n
+                    id={`shoppingCart.state.${state}.label`}
+                    fallback={state}
+                  />
+                </Value>
+              </TableData>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Main>
   );
 }
