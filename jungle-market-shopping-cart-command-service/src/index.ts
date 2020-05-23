@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import './model';
 import getConfig from './config';
 
+import addCustomerIdToCart from './services/addCustomerIdToCart';
 import addProductToCart from './services/addProductToCart';
 import closeShoppingCart from './services/closeShoppingCart';
 
@@ -20,6 +21,16 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
   if (msg.content) {
     const { type, ...payload } = JSON.parse(msg.content.toString());
     switch (type) {
+      case 'customerIdentified':
+        addCustomerIdToCart(payload.customerNonce, payload.customerId)
+          .then((v) => {
+            console.info("Success: addCustomerIdToCart", v)
+            channel.ack(msg);
+          })
+          .catch((error: Error) => {
+            console.error("Error: addCustomerIdToCart", error);
+            channel.nack(msg, false, true);
+          });
       case 'customerPickedProduct':
         addProductToCart(payload.customerNonce, payload.skuId)
           .then((v) => {

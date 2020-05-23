@@ -7,6 +7,7 @@ export enum ShoppingCartState {
 
 const ShoppingCartSchema = new Schema({
   customerNonce: String,
+  customerId: String,
   products: {
     type: [],
     default: [],
