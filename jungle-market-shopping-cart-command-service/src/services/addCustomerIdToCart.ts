@@ -8,6 +8,5 @@ export default function addCustomerIdToCart(customerNonce: string, customerId: s
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },
     { customerId },
-    { new: true, upsert: true },
   );
 }

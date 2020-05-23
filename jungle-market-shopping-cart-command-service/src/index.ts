@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import './model';
 import getConfig from './config';
 
+import createShoppingCartForCustomerAtBranch from './services/createShoppingCartForCustomerAtBranch';
 import addCustomerIdToCart from './services/addCustomerIdToCart';
 import addProductToCart from './services/addProductToCart';
 import closeShoppingCart from './services/closeShoppingCart';
@@ -21,6 +22,16 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
   if (msg.content) {
     const { type, ...payload } = JSON.parse(msg.content.toString());
     switch (type) {
+      case 'customerEntersBranch':
+        createShoppingCartForCustomerAtBranch(payload.customerNonce, payload.branchId)
+          .then((v) => {
+            console.info("Success: createShoppingCartForCustomerAtBranch", v)
+            channel.ack(msg);
+          })
+          .catch((error: Error) => {
+            console.error("Error: createShoppingCartForCustomerAtBranch", error);
+            channel.nack(msg, false, true);
+          });
       case 'customerIdentified':
         addCustomerIdToCart(payload.customerNonce, payload.customerId)
           .then((v) => {

@@ -7,15 +7,18 @@ const GET_SHOPPING_CARTS = gql`
       shoppingCarts {
         branch {
           id
+          cname
         }
         customer {
           id
+          nonce
           fullName
         }
         products {
           count
           sku {
             id
+            shortName
           }
         }
         state
@@ -27,9 +30,13 @@ const GET_SHOPPING_CARTS = gql`
 type ShoppingCartsQueryResponse = {
   shoppingCarts: {
     shoppingCarts: {
-      branch?: string;
+      branch: {
+        id: string;
+        cname: string;
+      };
       customer: {
         id: string;
+        nonce: string;
         fullName: string;
       };
       products: [
@@ -37,6 +44,7 @@ type ShoppingCartsQueryResponse = {
           count: number;
           sku: {
             id: string;
+            shortName: string;
           };
         }
       ];

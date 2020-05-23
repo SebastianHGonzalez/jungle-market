@@ -44,7 +44,10 @@ export default function ShoppingCartList({ }: Props) {
           {shoppingCarts.map(({ customer, products, state }) => (
             <TableRow>
               <TableData>
-                <Value>{customer?.fullName}<small>({customer?.id})</small></Value>
+                <Value>{customer?.fullName}</Value>
+                <ValueDetail>
+                  id: {customer?.id} - nonce: {customer?.nonce}
+                </ValueDetail>
               </TableData>
               <TableData>
                 {products.map(({ sku, count }) => (
@@ -52,6 +55,8 @@ export default function ShoppingCartList({ }: Props) {
                     <Value>
                       <I18n id="shoppingCart.products.sku.label" />
                       {': '}
+                      {sku?.shortName}
+                      {' '}
                       {sku?.id}
                     </Value>
                     <ValueDetail>

@@ -23,6 +23,7 @@ class ApplicationError extends Error {
 const typeDefs = gql`
   type Sku {
     id: ID!
+    shortName: String
   }
 
   type ShoppingCartProduct {
@@ -32,10 +33,12 @@ const typeDefs = gql`
 
   type Branch {
     id: ID!
+    cname: String
   }
 
   type Customer {
-    id: ID!
+    id: ID
+    nonce: String
     fullName: String
   }
 
@@ -55,11 +58,11 @@ const typeDefs = gql`
   }
 `;
 
-const branches = [{ id: 'branch1' }, { id: 'branch2' }];
+const branches = [{ id: 'branch1', cname: 'Quilmes Center' }, { id: 'branch2', cname: 'BeraMall' }];
 
 const customers = [{ id: 'customer1', fullName: 'juan domingo' }, { id: 'customer2', fullName: 'eva duarte' }];
 
-const skus = [{ id: 'sku1' }, { id: 'sku2' }];
+const skus = [{ id: 'sku1', shortName: 'papas' }, { id: 'sku2', shortName: 'bondiola' }];
 
 const resolvers = {
   Query: {
@@ -69,7 +72,7 @@ const resolvers = {
   },
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
-    customer: (shoppingCart: any) => customers.find(({ id }) => id === shoppingCart.customerId),
+    customer: (shoppingCart: any) => ({ ...(customers.find(({ id }) => id === shoppingCart.customerId) ?? {}), nonce: shoppingCart.customerNonce }),
     products: (shoppingCart: any) => Object.entries(
       shoppingCart.products.reduce(
         (acc: any, curr: string) => Object.assign(acc, { [curr]: (acc[curr] || 0) + 1 }),

@@ -7,7 +7,6 @@ const ShoppingCart = model('ShoppingCart');
 export default function addProductToCart(customerNonce: string, skuId: string) {
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },
-    { $push: { products: skuId }, $pull: { products: { $in: [null, undefined, ''] } } },
-    { new: true, upsert: true },
+    { $push: { products: skuId } },
   );
 }
