@@ -36,6 +36,7 @@ const typeDefs = gql`
 
   type Customer {
     id: ID!
+    fullName: String
   }
 
   type ShoppingCart {
@@ -56,7 +57,7 @@ const typeDefs = gql`
 
 const branches = [{ id: 'branch1' }, { id: 'branch2' }];
 
-const customers = [{ id: 'customer1' }, { id: 'customer2' }];
+const customers = [{ id: 'customer1', fullName: 'juan domingo' }, { id: 'customer2', fullName: 'eva duarte' }];
 
 const skus = [{ id: 'sku1' }, { id: 'sku2' }];
 
