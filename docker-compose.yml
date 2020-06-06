@@ -77,7 +77,7 @@ services:
             JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
             JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
             JUNGLE_MARKET_AMQP_QUEUE: "shoppingCart"
-            JUNGLE_MARKET_AMQP_PATTERN: ""
+            JUNGLE_MARKET_AMQP_PATTERN: "*"
         networks:
             - command-network
             - shopping-cart-network

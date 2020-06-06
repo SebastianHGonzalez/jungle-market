@@ -8,5 +8,6 @@ export default function addProductToCart(customerNonce: string, skuId: string) {
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },
     { $push: { products: skuId } },
+    { new: true },
   );
 }

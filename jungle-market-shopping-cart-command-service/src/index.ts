@@ -21,6 +21,7 @@ const {
 function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
   if (msg.content) {
     const { type, ...payload } = JSON.parse(msg.content.toString());
+    console.info('received message type: ', type);
     switch (type) {
       case 'customerEntersBranch':
         createShoppingCartForCustomerAtBranch(payload.customerNonce, payload.branchId)
@@ -32,6 +33,7 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
             console.error("Error: createShoppingCartForCustomerAtBranch", error);
             channel.nack(msg, false, true);
           });
+        break;
       case 'customerIdentified':
         addCustomerIdToCart(payload.customerNonce, payload.customerId)
           .then((v) => {
@@ -42,6 +44,7 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
             console.error("Error: addCustomerIdToCart", error);
             channel.nack(msg, false, true);
           });
+        break;
       case 'customerPickedProduct':
         addProductToCart(payload.customerNonce, payload.skuId)
           .then((v) => {
