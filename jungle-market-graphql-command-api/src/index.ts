@@ -34,6 +34,11 @@ amqp
         skuId: ID
       }
 
+      type CustomerDroppedProductMutationResponse {
+          customerNonce: ID!
+          skuId: ID!
+      }
+
       type CustomerLeavesMutationResponse {
         customerNonce: ID!
       }
@@ -58,6 +63,11 @@ amqp
           skuId: ID!
         ): CustomerPickedProductMutationResponse
       
+        customerDroppedProduct(
+          customerNonce: ID!
+          skuId: ID!
+        ): CustomerDroppedProductMutationResponse
+
         customerLeaves(
           customerNonce: ID!
         ): CustomerLeavesMutationResponse
@@ -112,6 +122,24 @@ amqp
             Buffer.from(
               JSON.stringify({
                 type: 'customerPickedProduct',
+                customerNonce,
+                skuId,
+              }),
+            ),
+          );
+
+          return {
+            customerNonce,
+            skuId,
+          };
+        },
+        customerDroppedProduct: (parent: unknown, { customerNonce, skuId }: any) => {
+          channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(
+              JSON.stringify({
+                type: 'customerDroppedProduct',
                 customerNonce,
                 skuId,
               }),

@@ -7,6 +7,7 @@ import getConfig from './config';
 import createShoppingCartForCustomerAtBranch from './services/createShoppingCartForCustomerAtBranch';
 import addCustomerIdToCart from './services/addCustomerIdToCart';
 import addProductToCart from './services/addProductToCart';
+import removeProductFromCart from './services/removeProductFromCart';
 import closeShoppingCart from './services/closeShoppingCart';
 
 const {
@@ -26,44 +27,55 @@ function onMessage(channel: amqp.Channel, msg: amqp.ConsumeMessage) {
       case 'customerEntersBranch':
         createShoppingCartForCustomerAtBranch(payload.customerNonce, payload.branchId)
           .then((v) => {
-            console.info("Success: createShoppingCartForCustomerAtBranch", v)
+            console.info('Success: createShoppingCartForCustomerAtBranch', v);
             channel.ack(msg);
           })
           .catch((error: Error) => {
-            console.error("Error: createShoppingCartForCustomerAtBranch", error);
+            console.error('Error: createShoppingCartForCustomerAtBranch', error);
             channel.nack(msg, false, true);
           });
         break;
       case 'customerIdentified':
         addCustomerIdToCart(payload.customerNonce, payload.customerId)
           .then((v) => {
-            console.info("Success: addCustomerIdToCart", v)
+            console.info('Success: addCustomerIdToCart', v);
             channel.ack(msg);
           })
           .catch((error: Error) => {
-            console.error("Error: addCustomerIdToCart", error);
+            console.error('Error: addCustomerIdToCart', error);
             channel.nack(msg, false, true);
           });
         break;
       case 'customerPickedProduct':
         addProductToCart(payload.customerNonce, payload.skuId)
           .then((v) => {
-            console.info("Success: addProductToCart", v)
+            console.info('Success: addProductToCart', v);
             channel.ack(msg);
           })
           .catch((error: Error) => {
-            console.error("Error: addProductToCart", error);
+            console.error('Error: addProductToCart', error);
+            channel.nack(msg, false, true);
+          });
+        break;
+      case 'customerDroppedProduct':
+        removeProductFromCart(payload.customerNonce, payload.skuId)
+          .then((v) => {
+            console.info('Success: customerDroppedProduct', v);
+            channel.ack(msg);
+          })
+          .catch((error: Error) => {
+            console.error('Error: customerDroppedProduct', error);
             channel.nack(msg, false, true);
           });
         break;
       case 'customerLeaves':
         closeShoppingCart(payload.customerNonce)
           .then((v) => {
-            console.info("Success: customerLeaves", v)
+            console.info('Success: customerLeaves', v);
             channel.ack(msg);
           })
           .catch((error: Error) => {
-            console.error("Error: customerLeaves", error);
+            console.error('Error: customerLeaves', error);
             channel.nack(msg, false, true);
           });
         break;
