@@ -55,8 +55,51 @@ mutation customerEntersBranch(
 }
 `;
 
+const customerIdentifiesMutation = gql`
+  mutation customerIdentifies(
+    $customerNonce: ID!
+    $customerId: ID!
+  ) {
+      customerIdentified(
+        customerNonce: $customerNonce
+        customerId: $customerId
+      ) {
+      customerNonce
+      customerId
+    }
+  }
+`;
+
+const customerPicksUpAProductMutation = gql`
+  mutation customerPicksUpAProduct(
+    $customerNonce: ID!
+    $skuId: ID!
+  ) {
+    customerPickedProduct(
+      customerNonce: $customerNonce
+      skuId: $skuId
+    ) {
+      customerNonce
+      skuId
+    }
+  }
+`;
+
+const customerLeavesMutation = gql`
+  mutation customerLeaves(
+    $customerNonce: ID!
+  ) {
+    customerLeaves(
+      customerNonce: $customerNonce
+    ) {
+      customerNonce
+    }
+  }
+`;
+
 export function getShoppingCartsFromBranch(branchId: string) {
   return queryClient.query({
+    fetchPolicy: 'no-cache',
     query: getShoppingCartsFromBranchQuery,
     variables: {
       branchId,
@@ -70,6 +113,35 @@ export function customerEntersBranch(customerNonce: string, branchId: string) {
     variables: {
       customerNonce,
       branchId,
+    },
+  });
+}
+
+export function customerIdentifiesAs(customerNonce: string, customerId: string) {
+  return commandClient.mutate({
+    mutation: customerIdentifiesMutation,
+    variables: {
+      customerNonce,
+      customerId,
+    },
+  });
+}
+
+export function customerPicksUpAProduct(customerNonce: string, skuId: string) {
+  return commandClient.mutate({
+    mutation: customerPicksUpAProductMutation,
+    variables: {
+      customerNonce,
+      skuId,
+    },
+  });
+}
+
+export function customerLeaves(customerNonce: string) {
+  return commandClient.mutate({
+    mutation: customerLeavesMutation,
+    variables: {
+      customerNonce,
     },
   });
 }
