@@ -5,6 +5,7 @@ import {
   customerEntersBranch,
   customerIdentifiesAs,
   customerPicksUpAProduct,
+  customerDropsOffAProduct,
   customerLeaves,
 } from 'service';
 
@@ -69,5 +70,18 @@ describe('jungle-market', () => {
 
     const product2 = customerShoppingCart4.products.find((p: { sku: { id: string } }) => p.sku.id === sku1);
     expect(product2.count).toBe(1);
+  });
+
+  test('when customers drops a product it should be removed from their shopping cart', async () => {
+    await customerEntersBranch(customerNonce, branchId);
+    await customerPicksUpAProduct(customerNonce, sku1);
+    await customerDropsOffAProduct(customerNonce, sku1);
+
+    const { data: { shoppingCarts: { shoppingCarts } } } = await getShoppingCartsFromBranch(branchId);
+    const customerShoppingCart = shoppingCarts.find(
+      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
+    );
+
+    expect(customerShoppingCart.products).toHaveLength(0);
   });
 });

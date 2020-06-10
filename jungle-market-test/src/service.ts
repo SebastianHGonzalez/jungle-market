@@ -85,6 +85,21 @@ const customerPicksUpAProductMutation = gql`
   }
 `;
 
+const customerDroppedProductMutation = gql`
+  mutation customerDroppedProduct(
+    $customerNonce: ID!
+    $skuId: ID!
+  ) {
+    customerDroppedProduct(
+      customerNonce: $customerNonce
+      skuId: $skuId
+    ) {
+      customerNonce
+      skuId
+    }
+  }
+`;
+
 const customerLeavesMutation = gql`
   mutation customerLeaves(
     $customerNonce: ID!
@@ -130,6 +145,16 @@ export function customerIdentifiesAs(customerNonce: string, customerId: string) 
 export function customerPicksUpAProduct(customerNonce: string, skuId: string) {
   return commandClient.mutate({
     mutation: customerPicksUpAProductMutation,
+    variables: {
+      customerNonce,
+      skuId,
+    },
+  });
+}
+
+export function customerDropsOffAProduct(customerNonce: string, skuId: string) {
+  return commandClient.mutate({
+    mutation: customerDroppedProductMutation,
     variables: {
       customerNonce,
       skuId,
