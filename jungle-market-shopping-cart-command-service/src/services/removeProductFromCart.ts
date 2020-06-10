@@ -7,7 +7,7 @@ const ShoppingCart = model('ShoppingCart');
 export default function removeProductFromCart(customerNonce: string, skuId: string) {
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },
-    { $pull: { products: skuId } },
+    { $inc: { [`products.${skuId}`]: -1 } },
     { new: true },
   );
 }

@@ -11,6 +11,7 @@ export default function createShoppingCartForCustomerAtBranch(customerNonce: str
     {
       new: true,
       upsert: true,
+      setDefaultsOnInsert: true,
     },
   );
 }

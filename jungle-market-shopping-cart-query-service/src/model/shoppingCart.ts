@@ -10,8 +10,8 @@ const ShoppingCartSchema = new Schema({
   customerId: { type: String, default: '' },
   branchId: { type: String, default: '' },
   products: {
-    type: [],
-    default: [],
+    type: {},
+    default: {},
   },
   state: { type: ShoppingCartState, default: ShoppingCartState.OPEN },
   updatedAt: { type: Date, default: Date.now },

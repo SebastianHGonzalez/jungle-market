@@ -73,16 +73,11 @@ const resolvers = {
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
     customer: (shoppingCart: any) => ({ ...(customers.find(({ id }) => id === shoppingCart.customerId) ?? {}), nonce: shoppingCart.customerNonce }),
-    products: (shoppingCart: any) => Object.entries(
-      shoppingCart.products.reduce(
-        (acc: any, curr: string) => Object.assign(acc, { [curr]: (acc[curr] || 0) + 1 }),
-        {},
-      ),
-    ).map(([skuId, count]) => ({ skuId, count })),
+    products: (shoppingCart: any) => Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count),
     state: (shoppingCart: any) => shoppingCart.state,
   },
   ShoppingCartProduct: {
-    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.skuId),
+    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.sku.id),
   },
 };
 
