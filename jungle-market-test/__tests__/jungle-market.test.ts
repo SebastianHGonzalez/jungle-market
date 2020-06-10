@@ -84,4 +84,19 @@ describe('jungle-market', () => {
 
     expect(customerShoppingCart.products).toHaveLength(0);
   });
+
+  test('when customers drops one item it should keep the other ones', async () => {
+    await customerEntersBranch(customerNonce, branchId);
+    await customerPicksUpAProduct(customerNonce, sku1);
+    await customerPicksUpAProduct(customerNonce, sku1);
+    await customerDropsOffAProduct(customerNonce, sku1);
+
+    const { data: { shoppingCarts: { shoppingCarts } } } = await getShoppingCartsFromBranch(branchId);
+    const customerShoppingCart = shoppingCarts.find(
+      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
+    );
+
+    expect(customerShoppingCart.products).toHaveLength(1);
+    expect(customerShoppingCart.products[0].count).toBe(1);
+  });
 });
