@@ -3,16 +3,16 @@ import React from 'react';
 import I18n from 'components/common/i18n';
 import { PageLayout, Head, Main, Body, Aside } from 'components/common/layout';
 import Drawer from 'components/common/drawer';
-import ShoppingCartsList from 'components/shopping-carts-list';
+import ShoppingCart from 'components/shopping-cart';
 
 import { QueryStateProvider, deserializeQuery } from 'hooks/useQueryState';
 
 interface Props {
-  branchId: string;
+  shoppingCartId: string;
   initialState: {};
 }
 
-export default function ShoppingCartsListPage({ initialState }: Props) {
+export default function ShoppingCartPage({ initialState, shoppingCartId }: Props) {
   return (
     <PageLayout>
       <Head>
@@ -24,7 +24,7 @@ export default function ShoppingCartsListPage({ initialState }: Props) {
         </Aside>
         <Main>
           <QueryStateProvider initialState={initialState}>
-            <ShoppingCartsList />
+            <ShoppingCart id={shoppingCartId} />
           </QueryStateProvider>
         </Main>
       </Body>
@@ -32,6 +32,7 @@ export default function ShoppingCartsListPage({ initialState }: Props) {
   );
 }
 
-ShoppingCartsListPage.getInitialProps = ({ query }) => ({
+ShoppingCartPage.getInitialProps = ({ query: { shoppingCartId, ...query } }) => ({
   initialState: deserializeQuery(query),
+  shoppingCartId,
 });

@@ -28,7 +28,7 @@ export default function Drawer() {
         </Link>
       </MenuOption>
       <MenuOption>
-        <Link href="/shopping-carts" component={A}>
+        <Link href="/shopping-carts" component={A} activeOnSubRoutes>
           <I18n id="drawer.shoppingCarts" />
         </Link>
       </MenuOption>
