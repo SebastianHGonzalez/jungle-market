@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
+import { ShoppingCart } from 'model';
+
 const GET_SHOPPING_CARTS = gql`
   query getShoppingCarts($branchId: ID!) {
     shoppingCarts(branchId: $branchId) {
@@ -30,28 +32,7 @@ const GET_SHOPPING_CARTS = gql`
 
 type ShoppingCartsQueryResponse = {
   shoppingCarts: {
-    shoppingCarts: {
-      id: string;
-      branch: {
-        id: string;
-        cname: string;
-      };
-      customer: {
-        id: string;
-        nonce: string;
-        fullName: string;
-      };
-      products: [
-        {
-          count: number;
-          sku: {
-            id: string;
-            shortName: string;
-          };
-        }
-      ];
-      state: string;
-    }[];
+    shoppingCarts: ShoppingCart[];
   };
 };
 
@@ -63,7 +44,7 @@ export default function useShoppingCarts(branchId = 'branch1') {
         branchId,
       },
       skip: !branchId,
-      pollInterval: 1000,
+      pollInterval: 2500,
     },
   );
 }

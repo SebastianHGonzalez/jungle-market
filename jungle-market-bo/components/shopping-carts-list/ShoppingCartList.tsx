@@ -16,6 +16,7 @@ import {
 import I18n from 'components/common/i18n';
 import Link from 'components/common/Link';
 import { Title } from 'components/common/typography';
+import ShoppingCartState from 'components/shopping-cart/ShoppingCartState';
 
 type Props = React.Props<any>;
 
@@ -75,10 +76,7 @@ export default function ShoppingCartList({ }: Props) {
               <TableData>
                 <Link href="/shopping-carts/[shoppingCartId]" as={`/shopping-carts/${id}`} component={A}>
                   <Value>
-                    <I18n
-                      id={`shoppingCart.state.${state}.label`}
-                      fallback={state}
-                    />
+                    <ShoppingCartState state={state} />
                   </Value>
                 </Link>
               </TableData>
