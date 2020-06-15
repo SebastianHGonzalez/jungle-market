@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import useShoppingCarts from 'hooks/useShoppingCarts';
 
@@ -13,8 +14,15 @@ import {
   ValueDetail,
 } from 'components/common/layout/Table';
 import I18n from 'components/common/i18n';
+import Link from 'components/common/Link';
+import { Title } from 'components/common/typography';
 
 type Props = React.Props<any>;
+
+const A = styled.a`
+  display: contents;
+  cursor: pointer;
+`;
 
 export default function ShoppingCartList({ }: Props) {
   const { data, loading, error } = useShoppingCarts();
@@ -22,6 +30,10 @@ export default function ShoppingCartList({ }: Props) {
 
   return (
     <>
+      <Title>
+        <I18n id="shoppingCarts.label" />
+      </Title>
+
       {loading && 'loading'}
       {error && 'error'}
 
@@ -40,39 +52,35 @@ export default function ShoppingCartList({ }: Props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {shoppingCarts.map(({ customer, products, state }) => (
-            <TableRow>
+          {shoppingCarts.map(({
+            id, customer, products, state,
+          }) => (
+            <TableRow key={id}>
               <TableData>
-                <Value>{customer?.fullName}</Value>
-                <ValueDetail>
-                  id: {customer?.id} - nonce: {customer?.nonce}
-                </ValueDetail>
+                <Link href="/shopping-carts/[shoppingCartId]" as={`/shopping-carts/${id}`} component={A}>
+                  {
+                      customer?.fullName
+                        ? <Value>{customer.fullName}</Value>
+                        : <ValueDetail><I18n id="shoppingCart.customer.unidentified.label" /></ValueDetail>
+                  }
+                </Link>
               </TableData>
               <TableData>
-                {products.map(({ sku, count }) => (
-                  <>
-                    <Value>
-                      <I18n id="shoppingCart.products.sku.label" />
-                      {': '}
-                      {sku?.shortName}
-                      {' '}
-                      {sku?.id}
-                    </Value>
-                    <ValueDetail>
-                      <I18n id="shoppingCart.products.count.label" />
-                      {': '}
-                      {count}
-                    </ValueDetail>
-                  </>
-                ))}
+                <Link href="/shopping-carts/[shoppingCartId]" as={`/shopping-carts/${id}`} component={A}>
+                  <Value>
+                    {products.reduce((acc, { count }) => acc + count, 0)}
+                  </Value>
+                </Link>
               </TableData>
               <TableData>
-                <Value>
-                  <I18n
-                    id={`shoppingCart.state.${state}.label`}
-                    fallback={state}
-                  />
-                </Value>
+                <Link href="/shopping-carts/[shoppingCartId]" as={`/shopping-carts/${id}`} component={A}>
+                  <Value>
+                    <I18n
+                      id={`shoppingCart.state.${state}.label`}
+                      fallback={state}
+                    />
+                  </Value>
+                </Link>
               </TableData>
             </TableRow>
           ))}

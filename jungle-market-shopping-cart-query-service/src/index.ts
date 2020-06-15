@@ -43,6 +43,7 @@ const typeDefs = gql`
   }
 
   type ShoppingCart {
+    id: ID
     branch: Branch
     customer: Customer
     products: [ShoppingCartProduct]

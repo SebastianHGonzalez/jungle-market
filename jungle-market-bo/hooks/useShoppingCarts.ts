@@ -5,6 +5,7 @@ const GET_SHOPPING_CARTS = gql`
   query getShoppingCarts($branchId: ID!) {
     shoppingCarts(branchId: $branchId) {
       shoppingCarts {
+        id
         branch {
           id
           cname
@@ -30,6 +31,7 @@ const GET_SHOPPING_CARTS = gql`
 type ShoppingCartsQueryResponse = {
   shoppingCarts: {
     shoppingCarts: {
+      id: string;
       branch: {
         id: string;
         cname: string;
