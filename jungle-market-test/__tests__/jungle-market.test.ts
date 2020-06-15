@@ -72,7 +72,7 @@ describe('jungle-market', () => {
     expect(product2.count).toBe(1);
   });
 
-  test('when customers drops a product it should be removed from their shopping cart', async () => {
+  test('when customers drop a product it should be removed from their shopping cart', async () => {
     await customerEntersBranch(customerNonce, branchId);
     await customerPicksUpAProduct(customerNonce, sku1);
     await customerDropsOffAProduct(customerNonce, sku1);
@@ -85,7 +85,7 @@ describe('jungle-market', () => {
     expect(customerShoppingCart.products).toHaveLength(0);
   });
 
-  test('when customers drops one item it should keep the other ones', async () => {
+  test('when customers drop one item it should keep the other ones', async () => {
     await customerEntersBranch(customerNonce, branchId);
     await customerPicksUpAProduct(customerNonce, sku1);
     await customerPicksUpAProduct(customerNonce, sku1);

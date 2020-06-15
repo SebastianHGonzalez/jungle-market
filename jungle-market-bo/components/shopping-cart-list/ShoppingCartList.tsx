@@ -13,7 +13,6 @@ import {
   ValueDetail,
 } from 'components/common/layout/Table';
 import I18n from 'components/common/i18n';
-import { Main } from 'components/common/layout';
 
 type Props = React.Props<any>;
 
@@ -22,7 +21,7 @@ export default function ShoppingCartList({ }: Props) {
   const shoppingCarts = data?.shoppingCarts?.shoppingCarts ?? [];
 
   return (
-    <Main>
+    <>
       {loading && 'loading'}
       {error && 'error'}
 
@@ -79,6 +78,6 @@ export default function ShoppingCartList({ }: Props) {
           ))}
         </TableBody>
       </Table>
-    </Main>
+    </>
   );
 }

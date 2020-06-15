@@ -6,7 +6,7 @@ const separator = '#D4D4D4';
 const primary = '#440099';
 const primary75 = '#440099BF';
 const primary50 = '#44009980';
-const primary25 = '#44009940';
+const primary25 = '#E3CCFF';
 const primaryContrast = white;
 
 const secondary = '#D30098';

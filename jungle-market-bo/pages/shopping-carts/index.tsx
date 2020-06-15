@@ -3,7 +3,7 @@ import React from 'react';
 import I18n from 'components/common/i18n';
 import { PageLayout, Head, Main, Body, Aside } from 'components/common/layout';
 import Drawer from 'components/common/drawer';
-import Dashboard from 'components/dashboard';
+import ShoppingCartList from 'components/shopping-cart-list';
 
 import { QueryStateProvider, deserializeQuery } from 'hooks/useQueryState';
 
@@ -24,7 +24,7 @@ export default function BranchDashboardPage({ initialState }: Props) {
         </Aside>
         <Main>
           <QueryStateProvider initialState={initialState}>
-            <Dashboard />
+            <ShoppingCartList />
           </QueryStateProvider>
         </Main>
       </Body>

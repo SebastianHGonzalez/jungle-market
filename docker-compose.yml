@@ -37,7 +37,7 @@ services:
         restart: unless-stopped
         build: ./jungle-market-bo
         depends_on:
-            - shopping-cart-query-service
+            - graphql-query-api
         ports:
             - "8080:3000"
         environment:
@@ -49,7 +49,7 @@ services:
         restart: unless-stopped
         build: ./jungle-market-store-awareness-system-emulator
         depends_on:
-            - shopping-cart-command-service
+            - graphql-command-api
         ports:
             - "8081:3000"
         environment:
@@ -60,6 +60,8 @@ services:
     shopping-cart-query-service:
         restart: unless-stopped
         build: ./jungle-market-shopping-cart-query-service
+        depends_on: 
+            - shopping-cart-db
         environment:
             JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
         networks:
