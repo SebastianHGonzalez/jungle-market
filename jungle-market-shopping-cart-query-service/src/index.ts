@@ -4,8 +4,9 @@ import mongoose from 'mongoose';
 import './model';
 import getConfig from './config';
 import getBranchShoppingCarts from './services/getBranchShoppingCarts';
+import getShoppingCart from './services/getShoppingCart';
 
-const { mongoURL } = getConfig();
+const { mongoURL, port } = getConfig();
 
 class ApplicationError extends Error {
   log(logger: typeof console) {
@@ -56,6 +57,7 @@ const typeDefs = gql`
 
   type Query {
     shoppingCarts(branchId: ID!): ShoppingCartsQueryResult
+    shoppingCart(id: ID!): ShoppingCart
   }
 `;
 
@@ -69,6 +71,9 @@ const resolvers = {
   Query: {
     shoppingCarts: (parent: unknown, args: any) => ({
       shoppingCarts: getBranchShoppingCarts(args.branchId),
+    }),
+    shoppingCart: (parent: unknown, args: any) => ({
+      shoppingCart: getShoppingCart(args.id),
     }),
   },
   ShoppingCart: {
@@ -94,7 +99,7 @@ mongoose
   })
   .then(() =>
     // The `listen` method launches a web server.
-    server.listen().then(({ url }) => {
+    server.listen({ port }).then(({ url }) => {
       console.log(`🚀  Server ready at ${url}`);
     }))
   .catch((error) => {
