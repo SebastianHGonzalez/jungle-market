@@ -54,10 +54,13 @@ const typeDefs = gql`
   type ShoppingCartsQueryResult {
     shoppingCarts: [ShoppingCart]
   }
+  type ShoppingCartQueryResult {
+    shoppingCart: ShoppingCart
+  }
 
   type Query {
     shoppingCarts(branchId: ID!): ShoppingCartsQueryResult
-    shoppingCart(id: ID!): ShoppingCart
+    shoppingCart(id: ID!): ShoppingCartQueryResult
   }
 `;
 

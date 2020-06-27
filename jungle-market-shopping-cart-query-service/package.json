@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "dev": "concurrently \"tsc -b -w\" \"nodemon build/index\" ",
+    "dev:debug": "concurrently \"tsc -b -w\" \"nodemon --inspect build/index\" ",
     "build": "tsc -b",
     "start": "node build/index",
     "test": "jest"

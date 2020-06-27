@@ -26,7 +26,7 @@ export default function ShoppingCart({
     customer,
     products,
     state,
-  } = data?.shoppingCart ?? {} as ShoppingCartType;
+  } = data?.shoppingCart?.shoppingCart ?? {} as ShoppingCartType;
 
   return (
     <>

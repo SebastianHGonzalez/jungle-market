@@ -6,30 +6,34 @@ import { ShoppingCart, ID } from 'model';
 const GET_SHOPPING_CART = gql`
   query getShoppingCarts($shoppingCartId: ID!) {
     shoppingCart(id: $shoppingCartId) {
-      id
-      branch {
+      shoppingCart {
         id
-        cname
-      }
-      customer {
-        id
-        nonce
-        fullName
-      }
-      products {
-        count
-        sku {
+        branch {
           id
-          shortName
+          cname
         }
+        customer {
+          id
+          nonce
+          fullName
+        }
+        products {
+          count
+          sku {
+            id
+            shortName
+          }
+        }
+        state
       }
-      state
     }
   }
 `;
 
 type ShoppingCartQueryResponse = {
-  shoppingCart: ShoppingCart;
+  shoppingCart: {
+    shoppingCart: ShoppingCart;
+  };
 };
 
 export default function useShoppingCart(shoppingCartId: ID) {
