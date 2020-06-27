@@ -20,6 +20,7 @@
   "shoppingCart.state.label": "Estado",
   "shoppingCart.state.OPEN.label": "Abierto",
   "shoppingCart.state.CLOSED.label": "Cerrado",
+  "shoppingCart.history.addProductToCart.label": "Producto tomado",
 
   "results.count": "${pageSize} - ${count} Resultados"
 }
