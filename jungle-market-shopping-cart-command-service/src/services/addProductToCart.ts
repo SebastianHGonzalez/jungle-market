@@ -5,7 +5,7 @@ import { ShoppingCartState } from '../model/shoppingCart';
 const ShoppingCart = model('ShoppingCart');
 
 export default function addProductToCart(customerNonce: string, skuId: string) {
-  const historyNode = { name: 'addProductToCart', payload: { sku: { id: skuId } } };
+  const historyNode = { name: 'customerPickedProduct', payload: { sku: { id: skuId } } };
 
   return ShoppingCart.findOneAndUpdate(
     { customerNonce, state: ShoppingCartState.OPEN },

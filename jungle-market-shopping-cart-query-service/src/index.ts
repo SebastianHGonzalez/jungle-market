@@ -31,11 +31,12 @@ const typeDefs = gql`
 
   type ShoppingCartEventPayload {
     sku: Sku
+    customer: Customer
   }
 
   type ShoppingCartEvent {
-    name: String!
-    payload: ShoppingCartEventPayload!
+    name: String
+    payload: ShoppingCartEventPayload
     createdAt: Date
   }
 
@@ -106,7 +107,8 @@ const resolvers = {
     sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.sku.id),
   },
   ShoppingCartEventPayload: {
-    sku: (shoppingCartEventPayload: any) => skus.find(({ id }) => id === shoppingCartEventPayload.sku.id),
+    sku: (shoppingCartEventPayload: any) => shoppingCartEventPayload.sku?.id && skus.find(({ id }) => id === shoppingCartEventPayload.sku.id),
+    customer: (shoppingCartEventPayload: any) => shoppingCartEventPayload.customer?.id && customers.find(({ id }) => id === shoppingCartEventPayload.customer.id),
   },
 };
 
