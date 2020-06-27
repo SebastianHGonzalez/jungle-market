@@ -22,9 +22,21 @@ class ApplicationError extends Error {
 }
 
 const typeDefs = gql`
+  scalar Date
+
   type Sku {
     id: ID!
     shortName: String
+  }
+
+  type ShoppingCartEventPayload {
+    sku: Sku
+  }
+
+  type ShoppingCartEvent {
+    name: String!
+    payload: ShoppingCartEventPayload!
+    createdAt: Date
   }
 
   type ShoppingCartProduct {
@@ -47,6 +59,7 @@ const typeDefs = gql`
     id: ID
     branch: Branch
     customer: Customer
+    history: [ShoppingCartEvent]
     products: [ShoppingCartProduct]
     state: String
   }
@@ -86,11 +99,14 @@ const resolvers = {
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
     customer: (shoppingCart: any) => ({ ...(customers.find(({ id }) => id === shoppingCart.customerId) ?? {}), nonce: shoppingCart.customerNonce }),
-    products: (shoppingCart: any) => {debugger; return Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count)},
+    products: (shoppingCart: any) => Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count),
     state: (shoppingCart: any) => shoppingCart.state,
   },
   ShoppingCartProduct: {
     sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.sku.id),
+  },
+  ShoppingCartEventPayload: {
+    sku: (shoppingCartEventPayload: any) => skus.find(({ id }) => id === shoppingCartEventPayload.sku.id),
   },
 };
 

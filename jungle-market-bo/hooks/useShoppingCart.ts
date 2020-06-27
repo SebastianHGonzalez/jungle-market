@@ -8,6 +8,20 @@ const GET_SHOPPING_CART = gql`
     shoppingCart(id: $shoppingCartId) {
       shoppingCart {
         id
+
+
+        history {
+          name
+          createdAt
+          payload {
+            sku {
+              id
+              shortName
+            }
+          }
+        }
+
+
         branch {
           id
           cname

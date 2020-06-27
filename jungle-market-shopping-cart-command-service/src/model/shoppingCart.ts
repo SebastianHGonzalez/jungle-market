@@ -9,6 +9,10 @@ const ShoppingCartSchema = new Schema({
   customerNonce: { type: String, default: '' },
   customerId: { type: String, default: '' },
   branchId: { type: String, default: '' },
+  history: {
+    type: [{ name: String, payload: {}, createdAt: { type: Date, default: Date.now } }],
+    default: [],
+  },
   products: {
     type: {},
     default: {},
