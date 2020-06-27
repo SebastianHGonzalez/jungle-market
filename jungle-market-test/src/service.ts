@@ -14,8 +14,8 @@ const queryClient = new ApolloClient({
 });
 
 const getShoppingCartsFromBranchQuery = gql`
-query getShoppingCartsFromBranch($branchId: ID!){
-  shoppingCarts(branchId: $branchId) {
+query getShoppingCartsFromBranch($customerNonce: [ID!]){
+  shoppingCarts(customerNonce: $customerNonce) {
     shoppingCarts {
       branch {
         id
@@ -112,12 +112,12 @@ const customerLeavesMutation = gql`
   }
 `;
 
-export function getShoppingCartsFromBranch(branchId: string) {
+export function getShoppingCartFromCustomerNonce(customerNonce: string) {
   return queryClient.query({
     fetchPolicy: 'no-cache',
     query: getShoppingCartsFromBranchQuery,
     variables: {
-      branchId,
+      customerNonce,
     },
   });
 }

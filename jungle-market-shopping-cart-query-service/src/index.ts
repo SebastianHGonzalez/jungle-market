@@ -39,7 +39,7 @@ const typeDefs = gql`
 
   type Customer {
     id: ID
-    nonce: String
+    nonce: ID
     fullName: String
   }
 
@@ -59,7 +59,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    shoppingCarts(branchId: ID!): ShoppingCartsQueryResult
+    shoppingCarts(branchId: [ID!], customerNonce: [ID!], customerId: [ID!]): ShoppingCartsQueryResult
     shoppingCart(id: ID!): ShoppingCartQueryResult
   }
 `;
@@ -73,7 +73,11 @@ const skus = [{ id: 'sku1', shortName: 'papas' }, { id: 'sku2', shortName: 'bond
 const resolvers = {
   Query: {
     shoppingCarts: (parent: unknown, args: any) => ({
-      shoppingCarts: getBranchShoppingCarts(args.branchId),
+      shoppingCarts: getBranchShoppingCarts({
+        branchIds: args.branchId,
+        customerNonces: args.customerNonce,
+        customerIds: args.customerId,
+      }),
     }),
     shoppingCart: (parent: unknown, args: any) => ({
       shoppingCart: getShoppingCart(args.id),
@@ -82,7 +86,7 @@ const resolvers = {
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
     customer: (shoppingCart: any) => ({ ...(customers.find(({ id }) => id === shoppingCart.customerId) ?? {}), nonce: shoppingCart.customerNonce }),
-    products: (shoppingCart: any) => Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count),
+    products: (shoppingCart: any) => {debugger; return Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count)},
     state: (shoppingCart: any) => shoppingCart.state,
   },
   ShoppingCartProduct: {

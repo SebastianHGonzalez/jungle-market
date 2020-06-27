@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  getShoppingCartsFromBranch,
+  getShoppingCartFromCustomerNonce,
   customerEntersBranch,
   customerIdentifiesAs,
   customerPicksUpAProduct,
@@ -23,10 +23,7 @@ describe('jungle-market', () => {
   test('when a customer enters a branch a shopping cart is created with his customer nonce', async () => {
     await customerEntersBranch(customerNonce, branchId);
 
-    const { data: { shoppingCarts: { shoppingCarts } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart = shoppingCarts.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     expect(customerShoppingCart).toBeTruthy();
   });
@@ -34,39 +31,27 @@ describe('jungle-market', () => {
   test('critical path', async () => {
     await customerEntersBranch(customerNonce, branchId);
 
-    const { data: { shoppingCarts: { shoppingCarts: shoppingCarts1 } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart1 = shoppingCarts1.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart1] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     expect(customerShoppingCart1).toBeTruthy();
 
     await customerIdentifiesAs(customerNonce, customerId);
 
-    const { data: { shoppingCarts: { shoppingCarts: shoppingCarts2 } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart2 = shoppingCarts2.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart2] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     expect(customerShoppingCart2.customer.id).toBe(customerId);
 
 
     await customerPicksUpAProduct(customerNonce, sku1);
 
-    const { data: { shoppingCarts: { shoppingCarts: shoppingCarts3 } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart3 = shoppingCarts3.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart3] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     const product1 = customerShoppingCart3.products.find((p: { sku: { id: string } }) => p.sku.id === sku1);
     expect(product1.count).toBe(1);
 
     await customerLeaves(customerNonce);
 
-    const { data: { shoppingCarts: { shoppingCarts: shoppingCarts4 } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart4 = shoppingCarts4.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'CLOSED',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart4] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     const product2 = customerShoppingCart4.products.find((p: { sku: { id: string } }) => p.sku.id === sku1);
     expect(product2.count).toBe(1);
@@ -77,10 +62,7 @@ describe('jungle-market', () => {
     await customerPicksUpAProduct(customerNonce, sku1);
     await customerDropsOffAProduct(customerNonce, sku1);
 
-    const { data: { shoppingCarts: { shoppingCarts } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart = shoppingCarts.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     expect(customerShoppingCart.products).toHaveLength(0);
   });
@@ -91,10 +73,7 @@ describe('jungle-market', () => {
     await customerPicksUpAProduct(customerNonce, sku1);
     await customerDropsOffAProduct(customerNonce, sku1);
 
-    const { data: { shoppingCarts: { shoppingCarts } } } = await getShoppingCartsFromBranch(branchId);
-    const customerShoppingCart = shoppingCarts.find(
-      (shoppingCart: { customer: { nonce: string }; state: string }) => shoppingCart.customer.nonce === customerNonce && shoppingCart.state === 'OPEN',
-    );
+    const { data: { shoppingCarts: { shoppingCarts: [customerShoppingCart] } } } = await getShoppingCartFromCustomerNonce(customerNonce);
 
     expect(customerShoppingCart.products).toHaveLength(1);
     expect(customerShoppingCart.products[0].count).toBe(1);

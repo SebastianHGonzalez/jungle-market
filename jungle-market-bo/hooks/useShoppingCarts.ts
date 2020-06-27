@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import { ShoppingCart } from 'model';
 
 const GET_SHOPPING_CARTS = gql`
-  query getShoppingCarts($branchId: ID!) {
+  query getShoppingCarts($branchId: [ID!]) {
     shoppingCarts(branchId: $branchId) {
       shoppingCarts {
         id
