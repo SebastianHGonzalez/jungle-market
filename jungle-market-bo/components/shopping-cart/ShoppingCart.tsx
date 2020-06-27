@@ -57,14 +57,15 @@ export default function ShoppingCart({
         <Section>
           <div>
             <SubTitle>
-              {branch && (
-                <>
-                  <I18n id="shoppingCart.branch.label" />
-                  {': '}
-                  {branch.cname}
-                </>
-              )}
+              <I18n id="shoppingCart.branch.label" />
             </SubTitle>
+            {branch && (
+              <>
+                <I18n id="shoppingCart.branch.cname.label" />
+                {': '}
+                {branch.cname}
+              </>
+            )}
           </div>
 
           <div>

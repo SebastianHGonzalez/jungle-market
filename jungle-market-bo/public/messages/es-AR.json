@@ -11,6 +11,7 @@
   "shoppingCarts.label": "Carritos de compra",
   "shoppingCart.label": "Carrito de compras",
   "shoppingCart.branch.label": "Sucursal",
+  "shoppingCart.branch.cname.label": "Nombre",
   "shoppingCart.customer.label": "Cliente",
   "shoppingCart.customer.unidentified.label": "<cliente no identificado>",
   "shoppingCart.customer.fullName.label": "Nombre completo",
