@@ -20,7 +20,12 @@
   "shoppingCart.state.label": "Estado",
   "shoppingCart.state.OPEN.label": "Abierto",
   "shoppingCart.state.CLOSED.label": "Cerrado",
-  "shoppingCart.history.addProductToCart.label": "Producto tomado",
+  
+  "shoppingCart.history.customerEntersBranch.label": "Cliente entró en la tienda",
+  "shoppingCart.history.customerIdentified.label": "Cliente se identificó",
+  "shoppingCart.history.customerPickedProduct.label": "Cliente tomó un producto",
+  "shoppingCart.history.customerDroppedProduct.label": "Cliente dejó un producto",
+  "shoppingCart.history.customerLeaves.label": "Cliente dejó la tienda",
 
   "results.count": "${pageSize} - ${count} Resultados"
 }

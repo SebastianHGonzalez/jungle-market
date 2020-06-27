@@ -7,8 +7,9 @@ export type Branch = { id: ID; cname: string };
 export type ShoppingCartEvent = {
   name: string;
   createdAt: string;
-  payload: {
-    sku: Sku;
+  payload?: {
+    customer?: Customer;
+    sku?: Sku;
   };
 }
 export type ShoppingCart = {

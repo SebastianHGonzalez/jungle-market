@@ -14,6 +14,10 @@ const GET_SHOPPING_CART = gql`
           name
           createdAt
           payload {
+            customer {
+              id
+              fullName
+            }
             sku {
               id
               shortName

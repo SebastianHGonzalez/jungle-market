@@ -98,7 +98,7 @@ export default function ShoppingCart({
         <Section>
 
           <Stepper>
-            {history?.map(({ createdAt, name, payload: { sku: { shortName } } }) => (
+            {history?.map(({ createdAt, name, payload }) => (
               <Step key={createdAt}>
                 <StepIcon />
                 <StepContent>
@@ -117,7 +117,10 @@ export default function ShoppingCart({
                       }}
                     />
                   </StepSubTitle>
-                  <StepBody>{shortName}</StepBody>
+                  <StepBody>
+                    {payload?.sku?.shortName}
+                    {payload?.customer?.fullName}
+                  </StepBody>
                 </StepContent>
               </Step>
             ))}
