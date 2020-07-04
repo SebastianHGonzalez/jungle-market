@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 
 import './model';
 import getConfig from './config';
-import getBranchShoppingCarts from './services/getBranchShoppingCarts';
+import getAggregation from './services/getAggregation';
+import getShoppingCarts from './services/getShoppingCarts';
 import getShoppingCart from './services/getShoppingCart';
 
 const { mongoURL, port } = getConfig();
@@ -66,6 +67,7 @@ const typeDefs = gql`
   }
 
   type ShoppingCartsQueryResult {
+    count: Int
     shoppingCarts: [ShoppingCart]
   }
   type ShoppingCartQueryResult {
@@ -73,7 +75,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    shoppingCarts(branchId: [ID!], customerNonce: [ID!], customerId: [ID!]): ShoppingCartsQueryResult
+    shoppingCarts(branchId: [ID!], customerNonce: [ID!], customerId: [ID!], from: Date, state: [String!]): ShoppingCartsQueryResult
     shoppingCart(id: ID!): ShoppingCartQueryResult
   }
 `;
@@ -87,7 +89,16 @@ const skus = [{ id: 'sku1', shortName: 'papas' }, { id: 'sku2', shortName: 'bond
 const resolvers = {
   Query: {
     shoppingCarts: (parent: unknown, args: any) => ({
-      shoppingCarts: getBranchShoppingCarts({
+      count: getAggregation({
+        from: args.from,
+        state: args.state,
+        branchIds: args.branchId,
+        customerNonces: args.customerNonce,
+        customerIds: args.customerId,
+      }),
+      shoppingCarts: getShoppingCarts({
+        from: args.from,
+        state: args.state,
         branchIds: args.branchId,
         customerNonces: args.customerNonce,
         customerIds: args.customerId,

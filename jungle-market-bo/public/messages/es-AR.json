@@ -8,6 +8,10 @@
   "drawer.dashboard": "Panel de control",
   "drawer.shoppingCarts": "Compras",
 
+  "dashboard.aggregations.lastDayItemsSold.label": "Productos vendidos hoy",
+  "dashboard.aggregations.lastDaySales.label": "Ventas hoy",
+  "dashboard.aggregations.customersCurrentlyOnStores.label": "Clientes en tienda",
+
   "shoppingCarts.label": "Carritos de compra",
   "shoppingCart.label": "Carrito de compras",
   "shoppingCart.branch.label": "Sucursal",

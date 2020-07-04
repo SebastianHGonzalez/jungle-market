@@ -99,7 +99,7 @@ export default function ShoppingCart({
         <Section>
 
           <Stepper>
-            {history?.map(({ createdAt, name, payload }) => (
+            {history?.concat().reverse().map(({ createdAt, name, payload }) => (
               <Step key={createdAt}>
                 <StepIcon />
                 <StepContent>
