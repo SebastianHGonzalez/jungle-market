@@ -57,10 +57,18 @@ services:
         networks:
             - command-network
 
+    customer-query-service:
+        restart: unless-stopped
+        build: ./jungle-market-customer-query-service
+        networks:
+          - query-network
+          - customer-network
+
     shopping-cart-query-service:
         restart: unless-stopped
         build: ./jungle-market-shopping-cart-query-service
         depends_on: 
+            - customer-query-service
             - shopping-cart-db
         environment:
             JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
@@ -114,4 +122,5 @@ services:
 networks:
     command-network: {}
     query-network: {}
+    customer-network: {}
     shopping-cart-network: {}
