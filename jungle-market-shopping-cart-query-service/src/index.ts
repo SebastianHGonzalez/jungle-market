@@ -6,6 +6,7 @@ import getConfig from './config';
 import getAggregation from './services/getAggregation';
 import getShoppingCarts from './services/getShoppingCarts';
 import getShoppingCart from './services/getShoppingCart';
+import getCustomerById from './services/getCustomerById';
 
 const { mongoURL, port } = getConfig();
 
@@ -82,8 +83,6 @@ const typeDefs = gql`
 
 const branches = [{ id: 'branch1', cname: 'Quilmes Center' }, { id: 'branch2', cname: 'BeraMall' }];
 
-const customers = [{ id: 'customer1', fullName: 'juan domingo' }, { id: 'customer2', fullName: 'eva duarte' }];
-
 const skus = [{ id: 'sku1', shortName: 'papas' }, { id: 'sku2', shortName: 'bondiola' }];
 
 const resolvers = {
@@ -110,7 +109,7 @@ const resolvers = {
   },
   ShoppingCart: {
     branch: (shoppingCart: any) => branches.find(({ id }) => id === shoppingCart.branchId),
-    customer: (shoppingCart: any) => ({ ...(customers.find(({ id }) => id === shoppingCart.customerId) ?? {}), nonce: shoppingCart.customerNonce }),
+    customer: async (shoppingCart: any) => ({ ...(await getCustomerById(shoppingCart.customerId)), nonce: shoppingCart.customerNonce }),
     products: (shoppingCart: any) => Object.entries(shoppingCart.products).map(([id, count]) => ({ sku: { id }, count })).filter(({ count }) => count),
     state: (shoppingCart: any) => shoppingCart.state,
   },
@@ -119,7 +118,7 @@ const resolvers = {
   },
   ShoppingCartEventPayload: {
     sku: (shoppingCartEventPayload: any) => shoppingCartEventPayload.sku?.id && skus.find(({ id }) => id === shoppingCartEventPayload.sku.id),
-    customer: (shoppingCartEventPayload: any) => shoppingCartEventPayload.customer?.id && customers.find(({ id }) => id === shoppingCartEventPayload.customer.id),
+    customer: (shoppingCartEventPayload: any) => shoppingCartEventPayload.customer?.id && getCustomerById(shoppingCartEventPayload.customer.id),
   },
 };
 

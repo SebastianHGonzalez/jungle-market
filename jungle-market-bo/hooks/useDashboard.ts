@@ -35,7 +35,7 @@ export default function useDashboard() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
-  const { data } = useQuery<DashboardQueryResponse>(DASHBOARD_QUERY, { variables: { from: today } });
+  const { data } = useQuery<DashboardQueryResponse>(DASHBOARD_QUERY, { variables: { from: today }, pollInterval: 5000 });
 
   const lastDayItemsSold = useMemo(() => data?.lastDaySales && getItemsSoldCount(data.lastDaySales.shoppingCarts), [data?.lastDaySales]);
   const lastDaySales = data?.lastDaySales.count;

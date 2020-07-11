@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { name } = require('faker');
+const { name } = require('faker/locale/es_MX');
 
 function createCustomers(count) {
   return new Array(count).fill(null).map((_, id) => ({

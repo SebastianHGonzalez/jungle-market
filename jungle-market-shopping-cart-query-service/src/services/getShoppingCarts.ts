@@ -25,5 +25,11 @@ export default function getBranchShoppingCarts({
     branchId: branchIds && { $in: branchIds },
     customerId: customerIds && { $in: customerIds },
     customerNonce: customerNonces && { $in: customerNonces },
-  }));
+  }),
+  undefined,
+  {
+    $sort: {
+      createdAt: -1,
+    },
+  });
 }
