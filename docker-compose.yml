@@ -1,126 +1,132 @@
 version: "3"
 services:
-    shopping-cart-db:
-        restart: unless-stopped
-        image: "mongo:4.2.6-bionic"
-        ports:
-            - "27017:27017"
-        environment:
-            - MONGO_INITDB_DATABASE=${SHOPPING_CART_DB_NAME}
-        networks:
-            - shopping-cart-network
+  shopping-cart-db:
+    restart: unless-stopped
+    image: "mongo:4.2.6-bionic"
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=${SHOPPING_CART_DB_NAME}
+    networks:
+      - shopping-cart-network
 
-    shopping-cart-db-ui:
-        image: mongo-express:0.54.0
-        environment:
-            - ME_CONFIG_MONGODB_SERVER=shopping-cart-db
-            - ME_CONFIG_MONGODB_PORT=27017
-            - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
-            - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
-        depends_on:
-            - shopping-cart-db
-        ports:
-            - "27018:8081"
-        networks:
-            - shopping-cart-network
+  shopping-cart-db-ui:
+    image: mongo-express:0.54.0
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=shopping-cart-db
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+    depends_on:
+      - shopping-cart-db
+    ports:
+      - "27018:8081"
+    networks:
+      - shopping-cart-network
 
-    rabbitmq:
-        restart: unless-stopped
-        image: "rabbitmq:3.6-management-alpine"
-        ports:
-            - "5672:5672"
-            - "15672:15672"
-        networks:
-            - command-network
+  rabbitmq:
+    restart: unless-stopped
+    image: "rabbitmq:3.6-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - command-network
 
-    back-office:
-        restart: unless-stopped
-        build: ./jungle-market-bo
-        depends_on:
-            - graphql-query-api
-        ports:
-            - "8080:3000"
-        environment:
-            JUNGLE_MARKET_QUERY_API_ENDPOINT: "http://graphql-query-api:4000/"
-        networks:
-            - query-network
+  back-office:
+    restart: unless-stopped
+    build: ./jungle-market-bo
+    depends_on:
+      - graphql-query-api
+    command: sh -c './wait-for.sh graphql-query-api:4000 -- npm start'
+    ports:
+      - "8080:3000"
+    environment:
+      JUNGLE_MARKET_QUERY_API_ENDPOINT: "http://graphql-query-api:4000/"
+    networks:
+      - query-network
 
-    sas-emulator:
-        restart: unless-stopped
-        build: ./jungle-market-store-awareness-system-emulator
-        depends_on:
-            - graphql-command-api
-        ports:
-            - "8081:3000"
-        environment:
-            JUNGLE_MARKET_COMMAND_API_ENDPOINT: "http://graphql-command-api:4000/"
-        networks:
-            - command-network
+  sas-emulator:
+    restart: unless-stopped
+    build: ./jungle-market-store-awareness-system-emulator
+    depends_on:
+      - graphql-command-api
+    command: sh -c './wait-for.sh graphql-command-api:4000 -- npm start'
+    ports:
+      - "8081:3000"
+    environment:
+      JUNGLE_MARKET_COMMAND_API_ENDPOINT: "http://graphql-command-api:4000/"
+    networks:
+      - command-network
 
-    customer-query-service:
-        restart: unless-stopped
-        build: ./jungle-market-customer-query-service
-        networks:
-          - query-network
-          - customer-network
+  customer-query-service:
+    restart: unless-stopped
+    build: ./jungle-market-customer-query-service
+    networks:
+      - query-network
+      - customer-network
 
-    shopping-cart-query-service:
-        restart: unless-stopped
-        build: ./jungle-market-shopping-cart-query-service
-        depends_on: 
-            - customer-query-service
-            - shopping-cart-db
-        environment:
-            JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
-        networks:
-            - query-network
-            - shopping-cart-network
+  shopping-cart-query-service:
+    restart: unless-stopped
+    build: ./jungle-market-shopping-cart-query-service
+    depends_on:
+      - customer-query-service
+      - shopping-cart-db
+    command: sh -c './wait-for.sh shopping-cart-db:27017 -- npm start'
+    environment:
+      JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
+    networks:
+      - query-network
+      - shopping-cart-network
 
-    shopping-cart-command-service:
-        restart: unless-stopped
-        build: ./jungle-market-shopping-cart-command-service
-        depends_on:
-            - rabbitmq
-        environment:
-            JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
-            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
-            JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
-            JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
-            JUNGLE_MARKET_AMQP_QUEUE: "shoppingCart"
-            JUNGLE_MARKET_AMQP_PATTERN: "*"
-        networks:
-            - command-network
-            - shopping-cart-network
+  shopping-cart-command-service:
+    restart: unless-stopped
+    build: ./jungle-market-shopping-cart-command-service
+    depends_on:
+      - rabbitmq
+    command: sh -c './wait-for.sh rabbitmq:15672 -- npm start'
+    environment:
+      JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
+      JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
+      JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
+      JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
+      JUNGLE_MARKET_AMQP_QUEUE: "shoppingCart"
+      JUNGLE_MARKET_AMQP_PATTERN: "*"
+    networks:
+      - command-network
+      - shopping-cart-network
 
-    graphql-query-api:
-        restart: unless-stopped
-        depends_on:
-            - shopping-cart-query-service
-        build: ./jungle-market-graphql-query-api
-        ports:
-            - "4000:4000"
-        environment:
-            JUNGLE_MARKET_SHOPPING_CART_QUERY_SERVICE_ENDPOINT: "http://shopping-cart-query-service:4000/"
-        networks:
-            - query-network
+  graphql-query-api:
+    restart: unless-stopped
+    depends_on:
+      - shopping-cart-query-service
+    command: sh -c './wait-for.sh shopping-cart-query-service:4000 -- npm start'
+    build: ./jungle-market-graphql-query-api
+    ports:
+      - "4000:4000"
+    environment:
+      JUNGLE_MARKET_SHOPPING_CART_QUERY_SERVICE_ENDPOINT: "http://shopping-cart-query-service:4000/"
+    networks:
+      - query-network
 
-    graphql-command-api:
-        restart: unless-stopped
-        build: ./jungle-market-graphql-command-api
-        ports:
-            - "4001:4000"
-        depends_on:
-            - rabbitmq
-        environment: 
-            JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
-            JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
-            JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
-            JUNGLE_MARKET_AMQP_ROUTING_KEY: ""
-        networks:
-            - command-network
+  graphql-command-api:
+    restart: unless-stopped
+    build: ./jungle-market-graphql-command-api
+    ports:
+      - "4001:4000"
+    depends_on:
+      - rabbitmq
+    command: sh -c './wait-for.sh rabbitmq:15672 -- npm start'
+    environment:
+      JUNGLE_MARKET_AMQP_URL: "amqp://rabbitmq?connection_attempts=5&retry_delay=5"
+      JUNGLE_MARKET_AMQP_EXCHANGE: "exchange"
+      JUNGLE_MARKET_AMQP_EXCHANGE_TYPE: "fanout"
+      JUNGLE_MARKET_AMQP_ROUTING_KEY: ""
+    networks:
+      - command-network
 
 networks:
-    command-network: {}
-    query-network: {}
-    customer-network: {}
-    shopping-cart-network: {}
+  command-network: {}
+  query-network: {}
+  customer-network: {}
+  shopping-cart-network: {}

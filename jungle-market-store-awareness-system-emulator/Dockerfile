@@ -19,6 +19,8 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
+COPY wait-for.sh wait-for.sh
+
 COPY --from=build /usr/src/app/package*.json ./
 
 RUN npm i --only=prod

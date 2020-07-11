@@ -15,6 +15,8 @@ FROM node:13.10.1-alpine3.11 as run
 
 WORKDIR /usr/src/app
 
+COPY wait-for.sh wait-for.sh
+
 COPY --from=build /usr/src/app/package*.json ./
 
 RUN npm i --only=prod
