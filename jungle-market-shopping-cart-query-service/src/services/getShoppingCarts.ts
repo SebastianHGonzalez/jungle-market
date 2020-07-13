@@ -26,9 +26,9 @@ export default function getBranchShoppingCarts({
     customerId: customerIds && { $in: customerIds },
     customerNonce: customerNonces && { $in: customerNonces },
   }),
-  undefined,
+  null,
   {
-    $sort: {
+    sort: {
       createdAt: -1,
     },
   });

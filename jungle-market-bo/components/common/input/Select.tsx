@@ -201,7 +201,7 @@ function ReadOnlySelect<T>({
       <ReadOnlySelectWrapper>
         {[value]
           .flat()
-          .map((child) => (getOptionLabel ? getOptionLabel(child) : child))}
+          .map((child) => (getOptionLabel ? getOptionLabel(child as any) : child))}
       </ReadOnlySelectWrapper>
       {isLoading && <Loader />}
     </InputWrapper>

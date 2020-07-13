@@ -48,7 +48,7 @@ export default function DateInput({
         value={dateValue}
         onDayChange={onChange}
         placeholder={placeholder}
-        dayPickerProps={dayPickerProps}
+        dayPickerProps={dayPickerProps as any}
         inputProps={inputProps}
       />
       {clearable && (
