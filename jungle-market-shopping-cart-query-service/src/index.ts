@@ -7,6 +7,7 @@ import getAggregation from './services/getAggregation';
 import getShoppingCarts from './services/getShoppingCarts';
 import getShoppingCart from './services/getShoppingCart';
 import getCustomerById from './services/getCustomerById';
+import getSkuById from './services/getSkuById';
 
 const { mongoURL, port } = getConfig();
 
@@ -114,10 +115,10 @@ const resolvers = {
     state: (shoppingCart: any) => shoppingCart.state,
   },
   ShoppingCartProduct: {
-    sku: (shoppingCartProduct: any) => skus.find(({ id }) => id === shoppingCartProduct.sku.id),
+    sku: (shoppingCartProduct: any) => shoppingCartProduct?.sku?.id && getSkuById(shoppingCartProduct.sku.id),
   },
   ShoppingCartEventPayload: {
-    sku: (shoppingCartEventPayload: any) => shoppingCartEventPayload.sku?.id && skus.find(({ id }) => id === shoppingCartEventPayload.sku.id),
+    sku: (shoppingCartEventPayload: any) => shoppingCartEventPayload.sku?.id && getSkuById(shoppingCartEventPayload.sku.id),
     customer: (shoppingCartEventPayload: any) => shoppingCartEventPayload.customer?.id && getCustomerById(shoppingCartEventPayload.customer.id),
   },
 };

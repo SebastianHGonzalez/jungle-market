@@ -9,6 +9,6 @@ function createProducts(count) {
   }));
 }
 
-const products = createProducts(100);
+const skus = createProducts(100);
 
-fs.writeFileSync('db.json', JSON.stringify({ products }));
+fs.writeFileSync('db.json', JSON.stringify({ skus }));

@@ -11,12 +11,13 @@ import {
 
 describe('jungle-market', () => {
   const branchId = 'branch1';
-  const sku1 = 'sku1';
 
+  let sku1: string;
   let customerId: string;
   let customerNonce: string;
 
   beforeEach(() => {
+    sku1 = Math.ceil(Math.random() * 100).toString();
     customerId = Math.ceil(Math.random() * 100).toString();
     customerNonce = uuidv4();
   });

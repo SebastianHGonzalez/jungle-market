@@ -66,15 +66,23 @@ services:
       - query-network
       - customer-network
 
+  catalog-query-service:
+    restart: unless-stopped
+    build: ./jungle-market-catalog-query-service
+    networks:
+      - query-network
+
   shopping-cart-query-service:
     restart: unless-stopped
     build: ./jungle-market-shopping-cart-query-service
     depends_on:
+      - catalog-query-service
       - customer-query-service
       - shopping-cart-db
     command: sh -c './wait-for.sh shopping-cart-db:27017 -- npm start'
     environment:
       JUNGLE_MARKET_CUSTOMER_QUERY_SERVICE_URL: http://customer-query-service:3000/graphql
+      JUNGLE_MARKET_CATALOG_QUERY_SERVICE_URL: http://catalog-query-service:3000/graphql
       JUNGLE_MARKET_SHOPPING_CART_DB_URL: mongodb://shopping-cart-db/${SHOPPING_CART_DB_NAME}
     networks:
       - query-network
