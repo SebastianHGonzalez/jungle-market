@@ -7,6 +7,7 @@ import {
   Stepper, Step, StepIcon, StepContent, StepTitle, StepSubTitle, StepBody,
 } from 'components/common/stepper';
 import FormattedDate from 'components/common/format/FormattedDate';
+import BackButton from 'components/common/BackButton';
 
 import useShoppingCart from 'hooks/useShoppingCart';
 
@@ -62,6 +63,7 @@ export default function ShoppingCart({
   return (
     <>
       <Title>
+        <BackButton />
         <I18n id="shoppingCart.label" />
         {': '}
         {state && <ShoppingCartState state={state} />}
