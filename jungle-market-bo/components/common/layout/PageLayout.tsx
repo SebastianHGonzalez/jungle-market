@@ -7,6 +7,7 @@ const PageLayout = styled.div`
   grid-template-rows: 4rem 1fr;
 
   height: 100%;
+  overflow: hidden;
 `;
 
 export default PageLayout;

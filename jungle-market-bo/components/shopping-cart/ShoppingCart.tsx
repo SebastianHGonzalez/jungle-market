@@ -24,11 +24,27 @@ const ProductsListItem = styled.li``;
 const Layout = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+  align-items: start;
 `;
 
 const Section = styled.section`
   display: grid;
   grid-gap: 1em;
+`;
+
+const StepperSection = styled(Section)`
+  position: relative;
+  overflow: hidden;
+`;
+
+const StepperFade = styled.div`
+  box-shadow: inset 0px 0px 32px 32px rgba(255,255,255,1);
+  position: absolute;
+  top: -100px;
+  bottom: 0;
+  left: -100px;
+  right: -100px;
+  pointer-events: none;
 `;
 
 export default function ShoppingCart({
@@ -96,9 +112,15 @@ export default function ShoppingCart({
             </ProductsList>
           </div>
         </Section>
-        <Section>
+        <StepperSection>
 
-          <Stepper>
+          <Stepper
+            style={{
+
+  maxHeight: "50vh",
+  overflow: "hidden auto",
+            }}
+          >
             {history?.concat().reverse().map(({ createdAt, name, payload }) => (
               <Step key={createdAt}>
                 <StepIcon />
@@ -126,7 +148,9 @@ export default function ShoppingCart({
               </Step>
             ))}
           </Stepper>
-        </Section>
+
+          <StepperFade />
+        </StepperSection>
       </Layout>
     </>
   );
