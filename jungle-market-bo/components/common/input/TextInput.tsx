@@ -51,7 +51,7 @@ export const InputCss = css`
   transition: 0.3s ${({ theme }) => theme.bezier.fast};
 
   ${({ theme, error }: any) =>
-    error ? `box-shadow: inset 0 0 2px ${theme.errorContrast};` : ""}
+    error ? `box-shadow: inset 0 0 15px ${theme.errorContrast};` : ""}
 `;
 
 export const Input = styled.input<TextInputProps>`
@@ -66,7 +66,7 @@ export const InputWrapper = styled.div<TextInputProps>`
 
   ${({ theme }) => `border: 1px solid ${theme.table.separator}`};
   ${({ theme, error }) =>
-    error ? `box-shadow: inset 0 0 2px ${theme.errorContrast};` : ""}
+    error ? `box-shadow: inset 0 0 15px ${theme.errorContrast};` : ""}
 `;
 
 function TextInput({ className, loading, error, ...props }: TextInputProps) {
