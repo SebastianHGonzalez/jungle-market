@@ -17,7 +17,7 @@
   "author": "Sebastian Gonzalez <sebastian.h.gonzalez@gmail.com>",
   "license": "GPL-3.0",
   "dependencies": {
-    "apollo-server": "^2.12.0",
+    "apollo-server": "^2.25.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "faker": "^4.1.0",
