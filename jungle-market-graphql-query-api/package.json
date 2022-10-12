@@ -17,7 +17,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "apollo-link-http": "^1.5.17",
-    "apollo-server": "^2.15.1",
+    "apollo-server": "^2.25.4",
     "graphql": "^15.3.0",
     "node-fetch": "^2.6.0"
   },
